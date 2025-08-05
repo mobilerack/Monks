@@ -1,0 +1,28 @@
+name: Unzip horizons-export-d1f3654e-703e-4b74-b4db-704302204d7d.zip on push
+
+on:
+  push:
+    paths:
+      - 'horizons-export-d1f3654e-703e-4b74-b4db-704302204d7d.zip'
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Unzip horizons-export-d1f3654e-703e-4b74-b4db-704302204d7d.zip
+        run: |
+          unzip -o horizons-export-d1f3654e-703e-4b74-b4db-704302204d7d.zip -d .
+      
+      - name: Remove ZIP file (optional)
+        run: rm horizons-export-d1f3654e-703e-4b74-b4db-704302204d7d.zip
+
+      - name: Commit unzipped content
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git commit -m "Unzipped horizons-export-d1f3654e-703e-4b74-b4db-704302204d7d.zip automatically" || echo "Nothing to commit"
+          git push
