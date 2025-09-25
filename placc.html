@@ -34,7 +34,6 @@
         th, td { border: 1px solid var(--border-color); padding: 12px 8px; text-align: right; vertical-align: middle; word-wrap: break-word; }
         th { background-color: var(--header-bg); color: white; text-align: center; position: sticky; top: 0; z-index: 10; }
         
-        /* Oszlop szélességek alkalmazása */
         th:nth-child(1), td:nth-child(1) { width: var(--col-1-width); text-align: left; font-weight: bold; }
         th:nth-child(2), td:nth-child(2) { width: var(--col-2-width); }
         th:nth-child(3), td:nth-child(3) { width: var(--col-3-width); }
@@ -56,7 +55,6 @@
         .total-display span:last-child { font-family: 'Courier New', Courier, monospace; }
         .positive { color: var(--positive-color); } .negative { color: var(--negative-color); }
 
-        /* --- BEÁLLÍTÁSOK MENÜ --- */
         .settings-area { text-align: right; margin-bottom: 10px; position: relative; z-index: 1001; }
         .settings-btn { background-color: #6c757d; font-weight: bold; }
         .settings-dropdown { display: none; position: absolute; right: 0; top: 100%; background-color: var(--container-bg); border: 1px solid var(--border-color); border-radius: 5px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; overflow: hidden; }
@@ -64,13 +62,12 @@
         .settings-dropdown button:last-child { border-bottom: none; }
         .settings-dropdown button:hover { background-color: rgba(128,128,128,0.1); }
 
-        /* --- MODÁL ABLAKOK --- */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
         .modal-content { background: var(--container-bg); color: var(--text-color); padding: 30px; border-radius: 10px; width: 90%; max-width: 600px; position: relative; }
         .modal-close-btn { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 2em; cursor: pointer; color: var(--text-color); line-height: 1; }
         .modal-content h3 { text-align: center; margin-top: 0; }
         .slider-container { margin-bottom: 15px; }
-        .slider-container label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .slider-container label { display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: bold; }
         .slider-container input[type="range"] { width: 100%; }
         .color-swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 10px; margin-top: 20px; }
         .color-swatch { width: 100%; height: 50px; border: 1px solid var(--border-color); border-radius: 5px; cursor: pointer; }
@@ -141,7 +138,7 @@
 const defaultItems = [ { name: "Rosé", price: "2200", start: "", added: "", current: "" }, { name: "Bikavér", price: "2200", start: "", added: "", current: "" }];
 const denominations = [20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10, 5];
 const columnNames = ["Tétel neve", "Kezdő", "Áru +", "Összes", "Jelenlegi", "Fogyás", "Ár", "Összeg"];
-const presetColors = ['#ffffff', '#212529', '#f4f4f9', '#1abc9c', '#3498db', '#9b59b6', '#e74c3c', '#f1c40f', '#34495e', '#7FFF00', '#FF00FF', '#00FFFF'];
+const presetColors = ['#ffffff', '#f4f4f9', '#34495e', '#1abc9c', '#3498db', '#9b59b6', '#e74c3c', '#f1c40f', '#2c3e50', '#7f8c8d'];
 
 // --- FŐ ADATKEZELŐ FUNKCIÓK ---
 function saveStateToLocalStorage() { const currentState = { inventory: [], cash: {} }; document.querySelectorAll('#inventory-table tr').forEach(row => { currentState.inventory.push({ name: row.querySelector('.item-name').value, start: row.querySelector('.start-qty').value, added: row.querySelector('.added-qty').value, current: row.querySelector('.current-qty').value, price: row.querySelector('.price').value }); }); denominations.forEach(d => { currentState.cash[`note_${d}`] = document.getElementById(`note-${d}`).value; }); currentState.cash.card_payment = document.getElementById('card-payment').value; currentState.cash.bank_amount = document.getElementById('bank-amount').value; currentState.cash.expense_amount = document.getElementById('expense-amount').value; localStorage.setItem('csaposlap_autosave', JSON.stringify(currentState)); }
@@ -156,7 +153,7 @@ function calculateCashInTill() { let cashTotal = 0; denominations.forEach(d => {
 function calculateTotals() { const salesTotal = calculateInventory(); const cashInTill = calculateCashInTill(); const bankAmount = parseFloat(document.getElementById('bank-amount').value) || 0; const expenseAmount = parseFloat(document.getElementById('expense-amount').value) || 0; const actualRevenue = cashInTill - bankAmount; const difference = actualRevenue - salesTotal; const netRevenue = actualRevenue - expenseAmount; document.getElementById('sales-total').querySelector('span:last-child').textContent = `${salesTotal.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`; document.getElementById('revenue-total').querySelector('span:last-child').textContent = `${actualRevenue.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`; document.getElementById('net-revenue').querySelector('span:last-child').textContent = `${netRevenue.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`; const diffElement = document.getElementById('difference'); const diffValueSpan = diffElement.querySelector('span:last-child'); diffValueSpan.textContent = `${difference.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`; diffElement.className = "total-display"; if (difference > 0.01) diffElement.classList.add('positive'); else if (difference < -0.01) diffElement.classList.add('negative'); }
 
 // --- FELÜLETKEZELÉS ---
-function addRow(item = { name: '', price: '', start: '', added: '', current: '' }) { const tableBody = document.getElementById('inventory-table'); const row = tableBody.insertRow(); row.innerHTML = `<td><input type="text" class="item-name" placeholder="Ital neve..." value="${item.name}" oninput="updateAllCalculations()"></td><td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value="${item.start}"></td><td><input type="number" step="0.01" class="added-qty" oninput="updateAllCalculations()" value="${item.added}"></td><td class="calculated total-qty">0.00</td><td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value="${item.current}"></td><td class="calculated consumption">0.00</td><td><input type="number" class="price" oninput="updateAllCalculations()" value="${item.price}"></td><td class="calculated total">0</td>`; }
+function addRow(item = { name: '', price: '', start: '', added: '', current: '' }) { const tableBody = document.getElementById('inventory-table'); const row = tableBody.insertRow(); row.innerHTML = `<td><input type="text" class="item-name" placeholder="Ital neve..." value="${item.name}" oninput="updateAllCalculations()"></td><td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value="${item.start}"></td><td><input type="number" step="0.01" class="added-qty" oninput="updateAllCalculations()" value="${item.added || ''}"></td><td class="calculated total-qty">0.00</td><td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value="${item.current}"></td><td class="calculated consumption">0.00</td><td><input type="number" class="price" oninput="updateAllCalculations()" value="${item.price}"></td><td class="calculated total">0</td>`; }
 function saveDataAsFile() { if(!confirm("A jelenlegi állapot egy letölthető HTML fájlként lesz elmentve. Folytatod?")) return; saveStateToLocalStorage(); const currentState = loadStateFromLocalStorage(); const fileContent = document.documentElement.outerHTML.replace('const savedData = null;', `const savedData = ${JSON.stringify(currentState, null, 4)};`); const blob = new Blob([fileContent], { type: 'text/html' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); const date = new Date(); const filename = `placc_lap_${date.getFullYear()}${String(date.getMonth()+1).padStart(2,'0')}${String(date.getDate()).padStart(2,'0')}.html`; a.download = filename; a.click(); URL.revokeObjectURL(a.href); }
 
 // --- BEÁLLÍTÁSOK LOGIKA ---
@@ -164,8 +161,31 @@ function toggleSettingsDropdown() { document.getElementById('settings-dropdown')
 function openModal(modalId) { document.getElementById(modalId).style.display = 'flex'; toggleSettingsDropdown(); }
 function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
 function getContrastYIQ(hexcolor){ hexcolor = hexcolor.replace("#", ""); const r = parseInt(hexcolor.substr(0,2),16); const g = parseInt(hexcolor.substr(2,2),16); const b = parseInt(hexcolor.substr(4,2),16); const yiq = ((r*299)+(g*587)+(b*114))/1000; return (yiq >= 128) ? '#212529' : '#ffffff'; }
-function applySettings(settings) { const textColor = getContrastYIQ(settings.bgColor); document.documentElement.style.setProperty('--bg-color', settings.bgColor); document.documentElement.style.setProperty('--container-bg', settings.bgColor); document.documentElement.style.setProperty('--text-color', textColor); settings.columnWidths.forEach((width, index) => { document.documentElement.style.setProperty(`--col-${index + 1}-width`, `${width}%`); const slider = document.getElementById(`col-slider-${index + 1}`); if(slider) slider.value = width; }); }
-function saveSettings() { const settings = { bgColor: document.documentElement.style.getPropertyValue('--bg-color').trim(), columnWidths: [] }; columnNames.forEach((_, index) => { const width = document.documentElement.style.getPropertyValue(`--col-${index + 1}-width`).replace('%', '').trim(); settings.columnWidths.push(parseFloat(width)); }); localStorage.setItem('placc_lap_settings', JSON.stringify(settings)); }
+
+function applySettings(settings) {
+    const textColor = getContrastYIQ(settings.bgColor);
+    // JAVÍTOTT LOGIKA: A container háttere mindig kontrasztos
+    const containerBg = (textColor === '#ffffff') ? '#2c3e50' : '#ffffff'; // Sötét módban sötétszürke, világosban fehér
+    
+    document.documentElement.style.setProperty('--bg-color', settings.bgColor);
+    document.documentElement.style.setProperty('--container-bg', containerBg);
+    document.documentElement.style.setProperty('--text-color', textColor);
+
+    settings.columnWidths.forEach((width, index) => { 
+        document.documentElement.style.setProperty(`--col-${index + 1}-width`, `${width}%`); 
+        const slider = document.getElementById(`col-slider-${index + 1}`); 
+        if(slider) slider.value = width; 
+    });
+}
+
+function saveSettings() {
+    const settings = { bgColor: document.documentElement.style.getPropertyValue('--bg-color').trim(), columnWidths: [] };
+    columnNames.forEach((_, index) => { 
+        const slider = document.getElementById(`col-slider-${index + 1}`);
+        if(slider) settings.columnWidths.push(parseFloat(slider.value));
+    });
+    localStorage.setItem('placc_lap_settings', JSON.stringify(settings));
+}
 
 // --- OLDAL BETÖLTÉSE ---
 const savedData = null; 
@@ -188,7 +208,10 @@ window.onload = function() {
     
     // Csúszkák létrehozása
     const slidersWrapper = document.getElementById('sliders-wrapper');
-    columnNames.forEach((name, index) => { slidersWrapper.innerHTML += `<div class="slider-container"><label for="col-slider-${index + 1}">${name}</label><input type="range" id="col-slider-${index + 1}" min="5" max="40" value="${savedSettings.columnWidths[index]}"></div>`; });
+    columnNames.forEach((name, index) => { 
+        const valueSpan = `<span id="val-span-${index + 1}">${savedSettings.columnWidths[index]}%</span>`;
+        slidersWrapper.innerHTML += `<div class="slider-container"><label for="col-slider-${index + 1}">${name} ${valueSpan}</label><input type="range" id="col-slider-${index + 1}" min="5" max="40" value="${savedSettings.columnWidths[index]}"></div>`; 
+    });
     
     // Színminták létrehozása
     const swatchGrid = document.querySelector('.color-swatch-grid');
@@ -196,7 +219,13 @@ window.onload = function() {
     
     applySettings(savedSettings);
 
-    slidersWrapper.querySelectorAll('input[type="range"]').forEach((slider, index) => { slider.addEventListener('input', (e) => { document.documentElement.style.setProperty(`--col-${index + 1}-width`, `${e.target.value}%`); }); slider.addEventListener('change', saveSettings); });
+    slidersWrapper.querySelectorAll('input[type="range"]').forEach((slider, index) => { 
+        slider.addEventListener('input', (e) => { 
+            document.documentElement.style.setProperty(`--col-${index + 1}-width`, `${e.target.value}%`);
+            document.getElementById(`val-span-${index + 1}`).textContent = `${e.target.value}%`;
+        }); 
+        slider.addEventListener('change', saveSettings); 
+    });
 
     document.addEventListener('click', function(event) { const dropdown = document.getElementById('settings-dropdown'); const btn = document.querySelector('.settings-btn'); if (btn && !btn.contains(event.target) && !dropdown.contains(event.target)) { dropdown.style.display = 'none'; } });
     
@@ -205,4 +234,3 @@ window.onload = function() {
 </script>
 </body>
 </html>
- 
