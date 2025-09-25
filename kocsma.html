@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Placc Lap Kódolás - Fejlesztett Verzió</title>
+    <title>Interaktív Csapos Elszámoló</title>
     <style>
         :root {
             --bg-color: #f4f4f9;
@@ -13,7 +13,6 @@
             --border-color: #ddd;
             --positive-color: #28a745;
             --negative-color: #dc3545;
-            --item-name-width: 30%; /* Alapértelmezett szélesség */
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -24,18 +23,17 @@
             transition: background-color 0.3s, color 0.3s;
         }
         .container {
-            max-width: 1600px;
+            max-width: 1400px;
             margin: auto;
             background: var(--container-bg);
             padding: 25px;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            position: relative;
             transition: background-color 0.3s;
+            position: relative;
         }
         h1, h2 {
             text-align: center;
-            color: var(--header-bg);
             border-bottom: 2px solid var(--header-bg);
             padding-bottom: 10px;
             margin-bottom: 20px;
@@ -44,24 +42,28 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            table-layout: fixed; 
         }
         th, td {
             border: 1px solid var(--border-color);
             padding: 12px 8px;
             text-align: right;
             vertical-align: middle;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         th {
             background-color: var(--header-bg);
             color: white;
             text-align: center;
-            position: sticky;
-            top: 0;
         }
-        th:first-child, td:first-child {
+        td:first-child, .cash-label {
             text-align: left;
             font-weight: bold;
-            width: var(--item-name-width); /* Dinamikus szélesség */
+        }
+        th:first-child {
+             width: 25%;
         }
         input {
             width: 95%;
@@ -74,13 +76,9 @@
             background-color: var(--container-bg);
             color: var(--text-color);
         }
-        td:first-child input {
-            text-align: left;
-        }
         .calculated {
             background-color: rgba(128,128,128,0.1);
             font-weight: bold;
-            font-size: 1.1em;
         }
         .button-container {
             text-align: center;
@@ -99,98 +97,111 @@
         .add-btn { background-color: #28a745; }
         .save-btn { background-color: #007bff; }
         .clear-btn { background-color: #dc3545; }
-        .new-shift-btn { background-color: #ffc107; color: #212529;}
-
-        .totals-section {
-            margin-top: 30px; padding: 20px; border: 2px solid var(--header-bg);
-            border-radius: 8px; background-color: var(--container-bg);
+        .new-shift-btn { background-color: #ffc107; color: #212529; }
+        
+        /* --- BEÁLLÍTÁSOK MENÜ --- */
+        .settings-container {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            text-align: right;
         }
-        .total-display {
-            font-size: 1.5em; font-weight: bold; padding: 10px; margin: 10px 0;
-            border-radius: 5px; display: flex; justify-content: space-between;
+        .settings-toggle {
+            font-size: 2em;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0 10px;
+            color: var(--text-color);
         }
-        .total-display span:last-child { font-family: 'Courier New', Courier, monospace; }
-        .positive { color: var(--positive-color); }
-        .negative { color: var(--negative-color); }
-
-        /* --- BEÁLLÍTÁSOK PANEL --- */
-        .settings-container { position: absolute; top: 15px; right: 20px; }
-        .settings-toggle { font-size: 2em; cursor: pointer; background: none; border: none; padding: 0 10px; color: var(--text-color); }
         .settings-panel {
-            display: none; position: absolute; top: 50px; right: 0; background: var(--container-bg);
-            border: 1px solid var(--border-color); padding: 20px; border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 100; text-align: left; width: 300px;
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: var(--container-bg);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 100;
+            text-align: left;
+            width: 280px;
         }
-        .settings-panel.visible { display: block; }
+        .settings-panel.visible {
+            display: block;
+        }
         .settings-panel h4 { margin-top: 0; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
         .settings-panel label { display: block; margin-bottom: 10px; font-weight: bold; }
-        .settings-panel input[type="color"] { width: 100%; height: 40px; padding: 0; border: none; }
-        .settings-panel input[type="range"] { width: 100%; }
+        .settings-panel input[type="color"] { width: 100%; height: 40px; padding: 0; border: none; cursor: pointer; }
         .settings-panel .checkbox-label { display: flex; align-items: center; font-weight: normal; }
-        .settings-panel input[type="checkbox"] { width: auto; margin-right: 10px; }
-        .settings-panel hr { margin: 20px 0; border: 0; border-top: 1px solid var(--border-color); }
+        .settings-panel input[type="checkbox"], input[type="range"] { width: auto; margin-right: 10px; }
+        .settings-panel hr { margin: 20px 0; }
+        .settings-panel button { width: 100%; box-sizing: border-box; }
+        /* Összesítés */
+        .totals-section { margin-top: 30px; padding: 20px; border: 2px solid var(--header-bg); border-radius: 8px; }
+        .total-display { font-size: 1.5em; font-weight: bold; padding: 10px; margin: 10px 0; border-radius: 5px; display: flex; justify-content: space-between; }
+        .total-display span:last-child { font-family: 'Courier New', Courier, monospace; }
+        .positive { color: var(--positive-color); } .negative { color: var(--negative-color); }
     </style>
 </head>
 <body>
-
 <div class="container">
     <div class="settings-container">
         <button class="settings-toggle" onclick="toggleSettings()">⚙️</button>
         <div id="settings-panel" class="settings-panel">
-            <h4>Beállítások</h4>
+            <h4>Adatkezelés</h4>
+            <button class="new-shift-btn" onclick="startNewShift()">Új Placc Készítés</button>
+            <button class="clear-btn" onclick="clearAllData()">Teljes Törlés (Tételek is)</button>
             <hr>
-            <h5>Méretezés</h5>
-            <label for="col-width-slider">"Tétel neve" oszlop szélessége</label>
-            <input type="range" id="col-width-slider" min="15" max="50" value="30">
-
-            <hr>
-            <h5>Kinézet</h5>
+            <h4>Kinézet</h4>
             <label for="bg-color-picker">Háttérszín</label>
-            <input type="color" id="bg-color-picker">
+            <input type="color" id="bg-color-picker" value="#f4f4f9">
             <label for="text-color-picker" id="text-color-label">Betűszín</label>
-            <input type="color" id="text-color-picker">
+            <input type="color" id="text-color-picker" value="#212529">
             <label class="checkbox-label">
-                <input type="checkbox" id="auto-text-color-toggle" checked> Automatikus betűszín
+                <input type="checkbox" id="auto-text-color-toggle" checked> Automatikus kontrasztos szövegszín
             </label>
+            <hr>
+            <h4>Oszlopok</h4>
+            <label for="width-slider">Oszlopok szélessége: <span id="width-value">100px</span></label>
+            <input type="range" id="width-slider" min="50" max="250" value="100" style="width: 100%;">
         </div>
     </div>
+    <h1>Interaktív Csapos Elszámoló</h1>
 
-    <h1>Interaktív Csapos Elszámoló (Placc Lap)</h1>
-
-    <div class="inventory-section">
+    <div class="sales-section" style="overflow-x: auto;">
         <h2>1. Forgalom Elszámoló</h2>
         <table>
             <thead>
                 <tr>
-                    <th>Tétel neve</th>
-                    <th>Kezdő (L/db)</th>
-                    <th>Áru +</th>
-                    <th>Összes</th>
-                    <th>Jelenlegi (L/db)</th>
-                    <th>Fogyás (L/db)</th>
-                    <th>Ár (Ft/egység)</th>
-                    <th>Összeg (Ft)</th>
+                    <th style="width: 25%;">Tétel neve</th>
+                    <th class="resizable-col">Kezdő (L/db)</th>
+                    <th class="resizable-col">Áru +</th>
+                    <th class="resizable-col">Összes</th>
+                    <th class="resizable-col">Jelenlegi (L/db)</th>
+                    <th class="resizable-col">Fogyás (L/db)</th>
+                    <th class="resizable-col">Ár (Ft)</th>
+                    <th class="resizable-col">Összeg (Ft)</th>
                 </tr>
             </thead>
             <tbody id="inventory-table"></tbody>
         </table>
-        <div class="button-container">
-            <button class="add-btn" onclick="addRow()">Új Tétel Hozzáadása</button>
-            <button class="save-btn" onclick="saveDataAsFile()">Mentés Fájlba</button>
-            <button class="new-shift-btn" onclick="startNewShift()">Új Placc Kezdése</button>
-            <button class="clear-btn" onclick="clearAllData()">Teljes Törlés</button>
-        </div>
+    </div>
+    <div class="button-container">
+        <button class="add-btn" onclick="addRow()">Új Tétel Hozzáadása</button>
+        <button class="save-btn" onclick="saveDataAsFile()">Mentés Fájlba</button>
     </div>
 
     <div class="cash-section">
         <h2>2. Kassza Zárás</h2>
         <table id="cash-table-container"></table>
     </div>
-
-    <div class="totals-section">
+    
+    <div class="totals-section" style="margin-top: 20px;">
         <h2>3. Összesítés</h2>
-        <div id="sales-total" class="total-display"><span>Össz forgalom (eladások alapján):</span> <span>0 Ft</span></div>
-        <div id="revenue-total" class="total-display"><span>Tényleges bevétel (kassza alapján):</span> <span>0 Ft</span></div>
+        <div id="sales-total" class="total-display"><span>Össz forgalom:</span> <span>0 Ft</span></div>
+        <div id="revenue-total" class="total-display"><span>Tényleges bevétel:</span> <span>0 Ft</span></div>
         <div id="difference" class="total-display"><span>Eltérés:</span> <span>0 Ft</span></div>
         <hr>
         <div id="net-revenue" class="total-display"><span>Nettó bevétel (kiadás után):</span> <span>0 Ft</span></div>
@@ -198,38 +209,19 @@
 </div>
 
 <script>
-// --- ALAPÉRTELMEZETT TÉTELEK ---
-const defaultItems = [
-    { name: "Rosé", price: "2200", start: "", added: "", current: "" },
-    { name: "Bikavér", price: "2200", start: "", added: "", current: "" },
-    { name: "Rizling", price: "2200", start: "", added: "", current: "" },
-    { name: "Barack pálinka", price: "4400", start: "", added: "", current: "" },
-    { name: "Jim Beam (Fon)", price: "11000", start: "", added: "", current: "" },
-    { name: "Hubertus", price: "12000", start: "", added: "", current: "" },
-    { name: "Unicum", price: "16000", start: "", added: "", current: "" },
-    { name: "Vilmoskörte", price: "16000", start: "", added: "", current: "" },
-    { name: "Csapolt Kőbányai (ár/liter!)", price: "1200", start: "", added: "", current: "" },
-    { name: "Kőbányai (0,5L)", price: "460", start: "", added: "", current: "" },
-    { name: "Soproni (0,5L)", price: "460", start: "", added: "", current: "" },
-    { name: "0,25L Coca-Cola", price: "250", start: "", added: "", current: "" },
-    { name: "Hell", price: "350", start: "", added: "", current: "" },
-    { name: "Rostos lé", price: "1000", start: "", added: "", current: "" },
-    { name: "Kávé", price: "430", start: "", added: "", current: "" },
-    { name: "Ropi", price: "170", start: "", added: "", current: "" },
-    { name: "Chips", price: "650", start: "", added: "", current: "" },
-];
+// --- ALAP ADATOK ---
+const defaultItems = [ { name: "Sör (csapolt)", price: "1200", start: "", goods_in: "", current: "" }, { name: "Unicum", price: "15000", start: "", goods_in: "", current: "" } ];
 const denominations = [20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10, 5];
 
-// --- ADATKEZELÉS ---
+// --- ADATKEZELŐ FUNKCIÓK ---
 function saveStateToLocalStorage() {
     const currentState = { inventory: [], cash: {} };
     document.querySelectorAll('#inventory-table tr').forEach(row => {
         currentState.inventory.push({
-            name: row.querySelector('.item-name').value,
-            start: row.querySelector('.start-qty').value,
-            added: row.querySelector('.added-qty').value,
-            current: row.querySelector('.current-qty').value,
-            price: row.querySelector('.price').value
+            name: row.querySelector('.item-name').value, price: row.querySelector('.price').value,
+            start: row.querySelector('.start-qty').value, 
+            goods_in: row.querySelector('.goods-in-qty').value,
+            current: row.querySelector('.current-qty').value
         });
     });
     denominations.forEach(d => { currentState.cash[`note_${d}`] = document.getElementById(`note-${d}`).value; });
@@ -245,25 +237,30 @@ function loadStateFromLocalStorage() {
 }
 
 function startNewShift() {
-    if (!confirm("Biztosan új elszámolást (placcot) szeretnél kezdeni? A tételek és árak megmaradnak, de a mennyiségek és a kassza adatai törlődnek.")) return;
+    if (!confirm("Biztosan új elszámolást szeretnél kezdeni?\nA tételek és árak megmaradnak, de a mennyiségek és a kassza adatai törlődnek.")) return;
     const currentData = loadStateFromLocalStorage() || { inventory: defaultItems, cash: {} };
-    currentData.inventory.forEach(item => { item.start = ''; item.added = ''; item.current = ''; });
+    currentData.inventory.forEach(item => { 
+        item.start = ''; 
+        item.goods_in = '';
+        item.current = ''; 
+    });
     currentData.cash = {};
     localStorage.setItem('csaposlap_autosave', JSON.stringify(currentData));
     location.reload();
 }
 
 function clearAllData() {
-    if (confirm("FIGYELEM! Biztosan törölni szeretnéd az ÖSSZES beírt adatot, beleértve a tételeket és árakat is? Ez a művelet nem vonható vissza.")) {
+    if (confirm("FIGYELEM! Biztosan törölni szeretnéd az összes beírt adatot, beleértve a tételeket és árakat is? Ez a művelet nem vonható vissza.")) {
         localStorage.removeItem('csaposlap_autosave');
-        localStorage.removeItem('placc_lap_settings');
         location.reload();
     }
 }
 
-// --- SZÁMÍTÁSI FÜGGVÉNYEK ---
+// --- FŐ SZÁMÍTÁSI FÜGGVÉNYEK ---
 function updateAllCalculations() {
-    calculateTotals();
+    const salesTotal = calculateInventory();
+    const revenueTotal = calculateCashInTill();
+    calculateTotals(salesTotal, revenueTotal);
     saveStateToLocalStorage();
 }
 
@@ -271,17 +268,16 @@ function calculateInventory() {
     let grandTotal = 0;
     document.querySelectorAll('#inventory-table tr').forEach(row => {
         const startQty = parseFloat(row.querySelector('.start-qty').value) || 0;
-        const addedQty = parseFloat(row.querySelector('.added-qty').value) || 0;
+        const goodsInQty = parseFloat(row.querySelector('.goods-in-qty').value) || 0;
         const currentQty = parseFloat(row.querySelector('.current-qty').value) || 0;
         const price = parseFloat(row.querySelector('.price').value) || 0;
         
-        const totalQty = startQty + addedQty;
-        // !!! MÓDOSÍTOTT LOGIKA KÉRÉS SZERINT !!!
-        // A fogyás az eredeti (Kezdő - Jelenlegi), az "Áru +" ezt nem befolyásolja.
+        const totalQty = startQty + goodsInQty;
+        row.querySelector('.total-qty').textContent = totalQty.toFixed(2);
+
         const consumption = startQty - currentQty;
         const total = consumption * price;
 
-        row.querySelector('.total-qty').textContent = totalQty.toFixed(2);
         row.querySelector('.consumption').textContent = consumption.toFixed(2);
         row.querySelector('.total').textContent = total.toLocaleString('hu-HU');
         grandTotal += total;
@@ -303,15 +299,12 @@ function calculateTotals() {
     const cashInTill = calculateCashInTill();
     const bankAmount = parseFloat(document.getElementById('bank-amount').value) || 0;
     const expenseAmount = parseFloat(document.getElementById('expense-amount').value) || 0;
-    
     const actualRevenue = cashInTill - bankAmount;
     const difference = actualRevenue - salesTotal;
     const netRevenue = actualRevenue - expenseAmount;
-
     document.getElementById('sales-total').querySelector('span:last-child').textContent = `${salesTotal.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`;
     document.getElementById('revenue-total').querySelector('span:last-child').textContent = `${actualRevenue.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`;
     document.getElementById('net-revenue').querySelector('span:last-child').textContent = `${netRevenue.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`;
-    
     const diffElement = document.getElementById('difference');
     const diffValueSpan = diffElement.querySelector('span:last-child');
     diffValueSpan.textContent = `${difference.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`;
@@ -320,40 +313,47 @@ function calculateTotals() {
     else if (difference < -0.01) diffElement.classList.add('negative');
 }
 
-
-// --- FELÜLETKEZELÉS ---
-function addRow(item = { name: '', price: '', start: '', added: '', current: '' }) {
+// --- UI FUNKCIÓK ---
+function addRow(item = { name: '', price: '', start: '', goods_in: '', current: '' }) {
     const tableBody = document.getElementById('inventory-table');
     const row = tableBody.insertRow();
     row.innerHTML = `
         <td><input type="text" class="item-name" placeholder="Ital neve..." value="${item.name}" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value="${item.start}"></td>
-        <td><input type="number" step="0.01" class="added-qty" oninput="updateAllCalculations()" value="${item.added}"></td>
-        <td class="calculated total-qty">0.00</td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value="${item.current}"></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="${item.price}"></td>
-        <td class="calculated total">0</td>`;
+        <td class="resizable-col"><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value="${item.start}"></td>
+        <td class="resizable-col"><input type="number" step="0.01" class="goods-in-qty" oninput="updateAllCalculations()" value="${item.goods_in || ''}"></td>
+        <td class="calculated resizable-col total-qty">0.00</td>
+        <td class="resizable-col"><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value="${item.current}"></td>
+        <td class="calculated resizable-col consumption">0.00</td>
+        <td class="resizable-col"><input type="number" class="price" oninput="updateAllCalculations()" value="${item.price}"></td>
+        <td class="calculated resizable-col total">0</td>`;
 }
 
 function saveDataAsFile() {
-    if(!confirm("A jelenlegi állapot egy letölthető HTML fájlként lesz elmentve. Folytatod?")) return;
-    saveStateToLocalStorage();
     const currentState = loadStateFromLocalStorage();
-    const fileContent = document.documentElement.outerHTML.replace('const savedData = null;', `const savedData = ${JSON.stringify(currentState, null, 4)};`);
+    const dataString = JSON.stringify(currentState, null, 4);
+    const savedDataScript = \`<script>const savedData = \${dataString};<\/script>\`;
+    const fileContent = \`<!DOCTYPE html>
+\${document.documentElement.innerHTML}
+\${savedDataScript}\`;
     const blob = new Blob([fileContent], { type: 'text/html' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    const date = new Date();
-    const filename = `placc_lap_${date.getFullYear()}${String(date.getMonth()+1).padStart(2,'0')}${String(date.getDate()).padStart(2,'0')}.html`;
-    a.download = filename;
+    a.download = 'csaposlap_mentett.html';
     a.click();
     URL.revokeObjectURL(a.href);
 }
 
-// --- BEÁLLÍTÁSOK LOGIKÁJA ---
+// --- BEÁLLÍTÁSOK MENÜ LOGIKÁJA ---
+const settingsPanel = document.getElementById('settings-panel');
+const bgColorPicker = document.getElementById('bg-color-picker');
+const textColorPicker = document.getElementById('text-color-picker');
+const autoColorToggle = document.getElementById('auto-text-color-toggle');
+const textColorLabel = document.getElementById('text-color-label');
+const widthSlider = document.getElementById('width-slider');
+const widthValueSpan = document.getElementById('width-value');
+
 function toggleSettings() {
-    document.getElementById('settings-panel').classList.toggle('visible');
+    settingsPanel.classList.toggle('visible');
 }
 
 function getContrastYIQ(hexcolor){
@@ -362,90 +362,108 @@ function getContrastYIQ(hexcolor){
     const g = parseInt(hexcolor.substr(2,2),16);
     const b = parseInt(hexcolor.substr(4,2),16);
     const yiq = ((r*299)+(g*587)+(b*114))/1000;
-    return (yiq >= 128) ? '#212529' : '#ffffff';
+    return (yiq >= 128) ? '#212529' : '#f8f9fa';
 }
 
-function applySettings(settings) {
-    document.documentElement.style.setProperty('--bg-color', settings.bgColor);
-    document.documentElement.style.setProperty('--container-bg', settings.bgColor);
-    document.documentElement.style.setProperty('--text-color', settings.textColor);
-    document.documentElement.style.setProperty('--item-name-width', `${settings.colWidth}%`);
-    
-    document.getElementById('bg-color-picker').value = settings.bgColor;
-    document.getElementById('text-color-picker').value = settings.textColor;
-    document.getElementById('col-width-slider').value = settings.colWidth;
+function applyTheme(bgColor, textColor) {
+    document.documentElement.style.setProperty('--bg-color', bgColor);
+    let containerBgColor = getContrastYIQ(bgColor) === '#212529' ? '#ffffff' : '#424242';
+    document.documentElement.style.setProperty('--container-bg', containerBgColor);
+    document.documentElement.style.setProperty('--text-color', textColor);
+    localStorage.setItem('theme', JSON.stringify({ bgColor, textColor }));
 }
 
-function saveSettings() {
-    const settings = {
-        bgColor: document.getElementById('bg-color-picker').value,
-        textColor: document.getElementById('text-color-picker').value,
-        colWidth: document.getElementById('col-width-slider').value
-    };
-    localStorage.setItem('placc_lap_settings', JSON.stringify(settings));
-    applySettings(settings);
+function applyWidthSetting() {
+    const newWidth = widthSlider.value;
+    const styleSheet = document.styleSheets[0];
+    for (let i = 0; i < styleSheet.cssRules.length; i++) {
+        if (styleSheet.cssRules[i].selectorText === '.resizable-col') {
+            styleSheet.deleteRule(i);
+            break;
+        }
+    }
+    styleSheet.insertRule(`.resizable-col { width: \${newWidth}px; }`, styleSheet.cssRules.length);
+    widthValueSpan.textContent = \`\${newWidth}px\`;
+    localStorage.setItem('columnWidth', newWidth);
 }
+
+bgColorPicker.addEventListener('input', (e) => {
+    const newBgColor = e.target.value;
+    let newTextColor = textColorPicker.value;
+    if (autoColorToggle.checked) {
+        newTextColor = getContrastYIQ(newBgColor);
+        textColorPicker.value = newTextColor;
+    }
+    applyTheme(newBgColor, newTextColor);
+});
+
+textColorPicker.addEventListener('input', (e) => {
+    if (!autoColorToggle.checked) {
+        applyTheme(bgColorPicker.value, e.target.value);
+    }
+});
+
+autoColorToggle.addEventListener('change', (e) => {
+    textColorPicker.disabled = e.target.checked;
+    textColorLabel.style.opacity = e.target.checked ? 0.5 : 1;
+    if (e.target.checked) {
+        const newTextColor = getContrastYIQ(bgColorPicker.value);
+        textColorPicker.value = newTextColor;
+        applyTheme(bgColorPicker.value, newTextColor);
+    }
+});
+
+widthSlider.addEventListener('input', applyWidthSetting);
 
 
 // --- OLDAL BETÖLTÉSE ---
-const savedData = null; 
+const savedData = null;
 window.onload = function() {
-    // Kassza táblázat létrehozása
-    let cashTableHTML = `
-        <tr><td style="font-weight: bold; background-color: #f0f0f0;">Bank (Kassza nyitó)</td><td><input type="number" id="bank-amount" oninput="updateAllCalculations()" placeholder="Nyitó pénzösszeg..."></td></tr>
-        <tr><td style="font-weight: bold; background-color: #f0f0f0;">Kiadás</td><td><input type="number" id="expense-amount" oninput="updateAllCalculations()" placeholder="Kifizetések összege..."></td></tr>
-    `;
+    // --- KASSZA FELÜLET LÉTREHOZÁSA (VISSZAILLESZTETT KÓD) ---
+    let cashTableHTML = \`<tr><td class="cash-label" style="background-color: #f0f0f0;">Bank (nyitó)</td><td><input type="number" id="bank-amount" oninput="updateAllCalculations()" placeholder="Összeg..."></td></tr><tr><td class="cash-label" style="background-color: #f0f0f0;">Kiadás</td><td><input type="number" id="expense-amount" oninput="updateAllCalculations()" placeholder="Összeg..."></td></tr>\`;
     denominations.forEach(d => {
-        cashTableHTML += `<tr><td>${d.toLocaleString('hu-HU')} Ft</td><td><input type="number" id="note-${d}" class="denomination-qty" oninput="updateAllCalculations()" placeholder="Darabszám..."></td></tr>`;
+        cashTableHTML += \`<tr><td class="cash-label">\${d.toLocaleString('hu-HU')} Ft</td><td><input type="number" id="note-\${d}" class="denomination-qty" oninput="updateAllCalculations()" placeholder="Darabszám..."></td></tr>\`;
     });
-    cashTableHTML += `<tr><td style="font-weight: bold;">Bankkártya (Ft)</td><td><input type="number" id="card-payment" oninput="updateAllCalculations()" placeholder="Bankkártyás bevétel..."></td></tr>`;
+    cashTableHTML += \`<tr><td class="cash-label">Bankkártya (Ft)</td><td><input type="number" id="card-payment" oninput="updateAllCalculations()" placeholder="Összeg..."></td></tr>\`;
     document.getElementById('cash-table-container').innerHTML = cashTableHTML;
-
-    // Adatok betöltése
-    const autoSavedState = loadStateFromLocalStorage();
-    const dataToLoad = autoSavedState || (savedData ? { inventory: savedData.inventory, cash: savedData.cash } : { inventory: defaultItems, cash: {} });
-
+    
+    // Tétel adatok betöltése
+    const dataToLoad = typeof savedData !== 'undefined' ? savedData : (loadStateFromLocalStorage() || { inventory: defaultItems, cash: {} });
     if (dataToLoad.inventory && dataToLoad.inventory.length > 0) {
         dataToLoad.inventory.forEach(item => addRow(item));
     } else {
-        defaultItems.forEach(item => addRow(item));
+        defaultItems.forEach(item => addRow());
     }
     
+    // --- KASSZA ADATOK BETÖLTÉSE (VISSZAILLESZTETT KÓD) ---
     if (dataToLoad.cash) {
-        denominations.forEach(d => { document.getElementById(`note-${d}`).value = dataToLoad.cash[`note_${d}`] || ''; });
-        document.getElementById('card-payment').value = dataToLoad.cash.card_payment || '';
-        document.getElementById('bank-amount').value = dataToLoad.cash.bank_amount || '';
-        document.getElementById('expense-amount').value = dataToLoad.cash.expense_amount || '';
+        denominations.forEach(d => { if(document.getElementById(\`note-\${d}\`)) document.getElementById(\`note-\${d}\`).value = dataToLoad.cash[\`note_\${d}\`] || ''; });
+        if(document.getElementById('card-payment')) document.getElementById('card-payment').value = dataToLoad.cash.card_payment || '';
+        if(document.getElementById('bank-amount')) document.getElementById('bank-amount').value = dataToLoad.cash.bank_amount || '';
+        if(document.getElementById('expense-amount')) document.getElementById('expense-amount').value = dataToLoad.cash.expense_amount || '';
     }
 
-    // Beállítások betöltése és eseménykezelők
-    const savedSettings = JSON.parse(localStorage.getItem('placc_lap_settings')) || { bgColor: '#ffffff', textColor: '#212529', colWidth: 30 };
-    applySettings(savedSettings);
+    // Téma betöltése
+    const savedTheme = JSON.parse(localStorage.getItem('theme'));
+    if (savedTheme) {
+        bgColorPicker.value = savedTheme.bgColor;
+        textColorPicker.value = savedTheme.textColor;
+        applyTheme(savedTheme.bgColor, savedTheme.textColor);
+    } else {
+        bgColorPicker.value = '#f4f4f9';
+        textColorPicker.value = '#212529';
+    }
+    textColorPicker.disabled = autoColorToggle.checked;
+    textColorLabel.style.opacity = autoColorToggle.checked ? 0.5 : 1;
 
-    const bgColorPicker = document.getElementById('bg-color-picker');
-    const textColorPicker = document.getElementById('text-color-picker');
-    const autoColorToggle = document.getElementById('auto-text-color-toggle');
-    const colWidthSlider = document.getElementById('col-width-slider');
+    // Oszlop szélesség betöltése
+    const savedWidth = localStorage.getItem('columnWidth');
+    if (savedWidth) {
+        widthSlider.value = savedWidth;
+    }
+    applyWidthSetting();
     
-    bgColorPicker.addEventListener('input', () => {
-        if (autoColorToggle.checked) {
-            textColorPicker.value = getContrastYIQ(bgColorPicker.value);
-        }
-        saveSettings();
-    });
-    textColorPicker.addEventListener('input', () => {
-        autoColorToggle.checked = false;
-        saveSettings();
-    });
-    autoColorToggle.addEventListener('change', () => {
-        if (autoColorToggle.checked) {
-            textColorPicker.value = getContrastYIQ(bgColorPicker.value);
-        }
-        saveSettings();
-    });
-    colWidthSlider.addEventListener('input', saveSettings);
-    
-    calculateTotals();
+    updateAllCalculations();
 };
 </script>
 </body>
