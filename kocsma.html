@@ -3,143 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Csapos Elszámoló</title>
-    <style id="dynamic-styles"></style>
+    <title>Placc Lap Kódolás - Fejlesztett Verzió</title>
     <style>
+        :root {
+            --bg-color: #f4f4f9;
+            --container-bg: #ffffff;
+            --text-color: #212529;
+            --header-bg: #007bff;
+            --border-color: #ddd;
+            --positive-color: #28a745;
+            --negative-color: #dc3545;
+            --item-name-width: 30%; /* Alapértelmezett szélesség */
+        }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f4f4f9;
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
         }
         .container {
-            max-width: 1000px;
+            max-width: 1600px;
             margin: auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: relative; /* A beállítások panel pozicionálásához */
+            background: var(--container-bg);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+            transition: background-color 0.3s;
         }
-        h1 {
+        h1, h2 {
             text-align: center;
-            color: #444;
+            color: var(--header-bg);
+            border-bottom: 2px solid var(--header-bg);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            table-layout: fixed; /* Fontos a szélességek pontos beállításához */
         }
         th, td {
-            border: 1px solid #ddd;
-            padding: 12px 8px; /* Kisebb padding a jobb olvashatóságért mobilon */
+            border: 1px solid var(--border-color);
+            padding: 12px 8px;
             text-align: right;
-            word-wrap: break-word; /* Hosszú szavak tördelése */
+            vertical-align: middle;
         }
         th {
-            background-color: #007bff;
+            background-color: var(--header-bg);
             color: white;
             text-align: center;
+            position: sticky;
+            top: 0;
         }
-        td:first-child {
+        th:first-child, td:first-child {
             text-align: left;
+            font-weight: bold;
+            width: var(--item-name-width); /* Dinamikus szélesség */
         }
-        input[type="text"], input[type="number"] {
+        input {
             width: 95%;
             padding: 8px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
             box-sizing: border-box;
             text-align: right;
-            font-size: 1em; /* Kicsit nagyobb betűméret */
+            font-size: 1em;
+            background-color: var(--container-bg);
+            color: var(--text-color);
         }
-        .item-name {
+        td:first-child input {
             text-align: left;
         }
         .calculated {
-            background-color: #e9ecef;
+            background-color: rgba(128,128,128,0.1);
             font-weight: bold;
+            font-size: 1.1em;
         }
         .button-container {
             text-align: center;
             margin-top: 20px;
         }
         button {
-            background-color: #28a745;
             color: white;
             border: none;
-            padding: 12px 25px;
+            padding: 10px 20px;
             font-size: 16px;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
+            margin: 5px;
         }
-        button:hover {
-            background-color: #218838;
-        }
-        #grand-total {
-            margin-top: 20px;
-            text-align: right;
-            font-size: 1.5em;
-            font-weight: bold;
-        }
+        .add-btn { background-color: #28a745; }
+        .save-btn { background-color: #007bff; }
+        .clear-btn { background-color: #dc3545; }
+        .new-shift-btn { background-color: #ffc107; color: #212529;}
 
-        /* --- BEÁLLÍTÁSOK MENÜ STÍLUSAI --- */
-        .settings-container {
-            position: absolute;
-            top: 15px;
-            right: 15px;
+        .totals-section {
+            margin-top: 30px; padding: 20px; border: 2px solid var(--header-bg);
+            border-radius: 8px; background-color: var(--container-bg);
         }
-        .settings-toggle {
-            font-size: 1.8em;
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 0 10px;
-            color: #555;
-            transition: transform 0.2s;
+        .total-display {
+            font-size: 1.5em; font-weight: bold; padding: 10px; margin: 10px 0;
+            border-radius: 5px; display: flex; justify-content: space-between;
         }
-        .settings-toggle:hover {
-            transform: rotate(45deg);
-        }
+        .total-display span:last-child { font-family: 'Courier New', Courier, monospace; }
+        .positive { color: var(--positive-color); }
+        .negative { color: var(--negative-color); }
+
+        /* --- BEÁLLÍTÁSOK PANEL --- */
+        .settings-container { position: absolute; top: 15px; right: 20px; }
+        .settings-toggle { font-size: 2em; cursor: pointer; background: none; border: none; padding: 0 10px; color: var(--text-color); }
         .settings-panel {
-            display: none;
-            position: absolute;
-            top: 45px;
-            right: 0;
-            background: #fff;
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 100;
-            width: 280px;
+            display: none; position: absolute; top: 50px; right: 0; background: var(--container-bg);
+            border: 1px solid var(--border-color); padding: 20px; border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 100; text-align: left; width: 300px;
         }
-        .settings-panel.visible {
-            display: block;
-        }
-        .settings-panel h4 {
-            margin-top: 0;
-            text-align: center;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-        .settings-panel label {
-            display: block;
-            margin: 15px 0 5px;
-            font-weight: bold;
-            font-size: 0.9em;
-        }
-        .settings-panel input[type="range"] {
-            width: 100%;
-        }
-        .settings-panel .width-display {
-            text-align: right;
-            font-size: 0.8em;
-            color: #777;
-        }
+        .settings-panel.visible { display: block; }
+        .settings-panel h4 { margin-top: 0; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
+        .settings-panel label { display: block; margin-bottom: 10px; font-weight: bold; }
+        .settings-panel input[type="color"] { width: 100%; height: 40px; padding: 0; border: none; }
+        .settings-panel input[type="range"] { width: 100%; }
+        .settings-panel .checkbox-label { display: flex; align-items: center; font-weight: normal; }
+        .settings-panel input[type="checkbox"] { width: auto; margin-right: 10px; }
+        .settings-panel hr { margin: 20px 0; border: 0; border-top: 1px solid var(--border-color); }
     </style>
 </head>
 <body>
@@ -148,194 +137,316 @@
     <div class="settings-container">
         <button class="settings-toggle" onclick="toggleSettings()">⚙️</button>
         <div id="settings-panel" class="settings-panel">
-            <h4>Oszlopok Szélessége</h4>
-            
-            <label for="name-width-slider">Tétel neve</label>
-            <input type="range" id="name-width-slider" min="20" max="50" oninput="updateColumnWidths()">
-            <div id="name-width-display" class="width-display"></div>
+            <h4>Beállítások</h4>
+            <hr>
+            <h5>Méretezés</h5>
+            <label for="col-width-slider">"Tétel neve" oszlop szélessége</label>
+            <input type="range" id="col-width-slider" min="15" max="50" value="30">
 
-            <label for="qty-width-slider">Mennyiségek (Kezdő/Jelenlegi)</label>
-            <input type="range" id="qty-width-slider" min="10" max="25" oninput="updateColumnWidths()">
-            <div id="qty-width-display" class="width-display"></div>
-
-            <label for="price-width-slider">Ár</label>
-            <input type="range" id="price-width-slider" min="10" max="25" oninput="updateColumnWidths()">
-            <div id="price-width-display" class="width-display"></div>
+            <hr>
+            <h5>Kinézet</h5>
+            <label for="bg-color-picker">Háttérszín</label>
+            <input type="color" id="bg-color-picker">
+            <label for="text-color-picker" id="text-color-label">Betűszín</label>
+            <input type="color" id="text-color-picker">
+            <label class="checkbox-label">
+                <input type="checkbox" id="auto-text-color-toggle" checked> Automatikus betűszín
+            </label>
         </div>
     </div>
 
-    <h1>Csapos Elszámoló Lap</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Tétel neve</th>
-                <th>1. Kezdő (L/db)</th>
-                <th>2. Jelenlegi (L/db)</th>
-                <th>3. Fogyás (L/db)</th>
-                <th>4. Ár (Ft)</th>
-                <th>5. Összeg (Ft)</th>
-            </tr>
-        </thead>
-        <tbody id="inventory-table">
-        </tbody>
-    </table>
-    <div class="button-container">
-        <button onclick="addRow()">Új Tétel Hozzáadása</button>
+    <h1>Interaktív Csapos Elszámoló (Placc Lap)</h1>
+
+    <div class="inventory-section">
+        <h2>1. Forgalom Elszámoló</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tétel neve</th>
+                    <th>Kezdő (L/db)</th>
+                    <th>Áru +</th>
+                    <th>Összes</th>
+                    <th>Jelenlegi (L/db)</th>
+                    <th>Fogyás (L/db)</th>
+                    <th>Ár (Ft/egység)</th>
+                    <th>Összeg (Ft)</th>
+                </tr>
+            </thead>
+            <tbody id="inventory-table"></tbody>
+        </table>
+        <div class="button-container">
+            <button class="add-btn" onclick="addRow()">Új Tétel Hozzáadása</button>
+            <button class="save-btn" onclick="saveDataAsFile()">Mentés Fájlba</button>
+            <button class="new-shift-btn" onclick="startNewShift()">Új Placc Kezdése</button>
+            <button class="clear-btn" onclick="clearAllData()">Teljes Törlés</button>
+        </div>
     </div>
-    <div id="grand-total">Teljes összeg: 0 Ft</div>
+
+    <div class="cash-section">
+        <h2>2. Kassza Zárás</h2>
+        <table id="cash-table-container"></table>
+    </div>
+
+    <div class="totals-section">
+        <h2>3. Összesítés</h2>
+        <div id="sales-total" class="total-display"><span>Össz forgalom (eladások alapján):</span> <span>0 Ft</span></div>
+        <div id="revenue-total" class="total-display"><span>Tényleges bevétel (kassza alapján):</span> <span>0 Ft</span></div>
+        <div id="difference" class="total-display"><span>Eltérés:</span> <span>0 Ft</span></div>
+        <hr>
+        <div id="net-revenue" class="total-display"><span>Nettó bevétel (kiadás után):</span> <span>0 Ft</span></div>
+    </div>
 </div>
 
 <script>
-    const defaultItems = [
-        { name: "Napóleon", pricePerUnit: 7000 }, { name: "Cherry", pricePerUnit: 6000 },
-        { name: "Vodka", pricePerUnit: 11000 }, { name: "Törköly", pricePerUnit: 12000 },
-        { name: "Hubertus", pricePerUnit: 12000 }, { name: "Jéger", pricePerUnit: 16000 },
-        { name: "Jim Beam", pricePerUnit: 16000 }, { name: "Unicum", pricePerUnit: 16000 },
-        { name: "Vili", pricePerUnit: 13000 }, { name: "Porto", pricePerUnit: 18000 },
-        { name: "Mák", pricePerUnit: 23000 }, { name: "Becherovka", pricePerUnit: 13000 },
-        { name: "Birs", pricePerUnit: 20000 }, { name: "Tátra", pricePerUnit: 18000 },
-        { name: "Jack Deniels", pricePerUnit: 19000 }, { name: "Csapolt", pricePerUnit: 1200 },
-        { name: "Rákóczi", pricePerUnit: 410 }, { name: "Kőbányai", pricePerUnit: 460 },
-        { name: "Soproni", pricePerUnit: 570 }, { name: "Borsodi", pricePerUnit: 510 },
-        { name: "Arany Ászok", pricePerUnit: 520 }, { name: "Bak", pricePerUnit: 600 },
-        { name: "Dreher", pricePerUnit: 580 }, { name: "Heineken", pricePerUnit: 650 },
-        { name: "Somersby", pricePerUnit: 770 }, { name: "Dr meggy", pricePerUnit: 670 },
-        { name: "Dr ment", pricePerUnit: 520 }, { name: "Dob Köb", pricePerUnit: 480 },
-        { name: "Staro", pricePerUnit: 650 }, { name: "Peroni", pricePerUnit: 630 },
-        { name: "Bacardi", pricePerUnit: 13000 }, { name: "Bika", pricePerUnit: 2200 },
-        { name: "Rizling", pricePerUnit: 2200 }, { name: "Rosé", pricePerUnit: 2200 },
-        { name: "Irsai", pricePerUnit: 2200 }, { name: "Orosz", pricePerUnit: 1800 },
-        { name: "Szürke", pricePerUnit: 2200 }, { name: "Szóda", pricePerUnit: 300 },
-        { name: "0,5 víz", pricePerUnit: 250 }, { name: "Coca", pricePerUnit: 450 },
-        { name: "Top joy", pricePerUnit: 380 }, { name: "Hell", pricePerUnit: 450 },
-        { name: "2/1", pricePerUnit: 1000 }, { name: "Rostos", pricePerUnit: 1200 },
-        { name: "0,33", pricePerUnit: 440 }, { name: "Kv", pricePerUnit: 310 },
-        { name: "Forró", pricePerUnit: 350 }, { name: "Cappucino", pricePerUnit: 350 },
-        { name: "Tejpor", pricePerUnit: 40 }, { name: "Tejszín", pricePerUnit: 40 },
-        { name: "Hab", pricePerUnit: 90 }, { name: "Tea", pricePerUnit: 350 },
-        { name: "Dr cit", pricePerUnit: 400 }, { name: "Ropi", pricePerUnit: 170 },
-        { name: "Sport", pricePerUnit: 310 }, { name: "Balcsi", pricePerUnit: 270 },
-        { name: "Tic tac", pricePerUnit: 360 }, { name: "Rágó", pricePerUnit: 400 },
-        { name: "Mogyi", pricePerUnit: 430 }, { name: "Chips", pricePerUnit: 650 },
-        { name: "Gyufa", pricePerUnit: 50 }, { name: "Pzs", pricePerUnit: 120 },
-        { name: "Milka", pricePerUnit: 650 }, { name: "Szotyi", pricePerUnit: 310 },
-        { name: "Tökmag", pricePerUnit: 450 }
-    ];
+// --- ALAPÉRTELMEZETT TÉTELEK ---
+const defaultItems = [
+    { name: "Rosé", price: "2200", start: "", added: "", current: "" },
+    { name: "Bikavér", price: "2200", start: "", added: "", current: "" },
+    { name: "Rizling", price: "2200", start: "", added: "", current: "" },
+    { name: "Barack pálinka", price: "4400", start: "", added: "", current: "" },
+    { name: "Jim Beam (Fon)", price: "11000", start: "", added: "", current: "" },
+    { name: "Hubertus", price: "12000", start: "", added: "", current: "" },
+    { name: "Unicum", price: "16000", start: "", added: "", current: "" },
+    { name: "Vilmoskörte", price: "16000", start: "", added: "", current: "" },
+    { name: "Csapolt Kőbányai (ár/liter!)", price: "1200", start: "", added: "", current: "" },
+    { name: "Kőbányai (0,5L)", price: "460", start: "", added: "", current: "" },
+    { name: "Soproni (0,5L)", price: "460", start: "", added: "", current: "" },
+    { name: "0,25L Coca-Cola", price: "250", start: "", added: "", current: "" },
+    { name: "Hell", price: "350", start: "", added: "", current: "" },
+    { name: "Rostos lé", price: "1000", start: "", added: "", current: "" },
+    { name: "Kávé", price: "430", start: "", added: "", current: "" },
+    { name: "Ropi", price: "170", start: "", added: "", current: "" },
+    { name: "Chips", price: "650", start: "", added: "", current: "" },
+];
+const denominations = [20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10, 5];
 
-    // --- MEGLÉVŐ FUNKCIÓK (VÁLTOZATLAN) ---
-    function addRow(name = '', price = '') {
-        const tableBody = document.getElementById('inventory-table');
-        const row = tableBody.insertRow();
-        row.innerHTML = `
-            <td><input type="text" class="item-name" placeholder="Ital neve..." value="${name}"></td>
-            <td><input type="number" class="start-qty" oninput="calculateAll()"></td>
-            <td><input type="number" class="current-qty" oninput="calculateAll()"></td>
-            <td class="calculated consumption">0.00</td>
-            <td><input type="number" class="price" oninput="calculateAll()" value="${price}"></td>
-            <td class="calculated total">0.00</td>
-        `;
+// --- ADATKEZELÉS ---
+function saveStateToLocalStorage() {
+    const currentState = { inventory: [], cash: {} };
+    document.querySelectorAll('#inventory-table tr').forEach(row => {
+        currentState.inventory.push({
+            name: row.querySelector('.item-name').value,
+            start: row.querySelector('.start-qty').value,
+            added: row.querySelector('.added-qty').value,
+            current: row.querySelector('.current-qty').value,
+            price: row.querySelector('.price').value
+        });
+    });
+    denominations.forEach(d => { currentState.cash[`note_${d}`] = document.getElementById(`note-${d}`).value; });
+    currentState.cash.card_payment = document.getElementById('card-payment').value;
+    currentState.cash.bank_amount = document.getElementById('bank-amount').value;
+    currentState.cash.expense_amount = document.getElementById('expense-amount').value;
+    localStorage.setItem('csaposlap_autosave', JSON.stringify(currentState));
+}
+
+function loadStateFromLocalStorage() {
+    const savedStateJSON = localStorage.getItem('csaposlap_autosave');
+    return savedStateJSON ? JSON.parse(savedStateJSON) : null;
+}
+
+function startNewShift() {
+    if (!confirm("Biztosan új elszámolást (placcot) szeretnél kezdeni? A tételek és árak megmaradnak, de a mennyiségek és a kassza adatai törlődnek.")) return;
+    const currentData = loadStateFromLocalStorage() || { inventory: defaultItems, cash: {} };
+    currentData.inventory.forEach(item => { item.start = ''; item.added = ''; item.current = ''; });
+    currentData.cash = {};
+    localStorage.setItem('csaposlap_autosave', JSON.stringify(currentData));
+    location.reload();
+}
+
+function clearAllData() {
+    if (confirm("FIGYELEM! Biztosan törölni szeretnéd az ÖSSZES beírt adatot, beleértve a tételeket és árakat is? Ez a művelet nem vonható vissza.")) {
+        localStorage.removeItem('csaposlap_autosave');
+        localStorage.removeItem('placc_lap_settings');
+        location.reload();
     }
+}
 
-    function calculateAll() {
-        const rows = document.getElementById('inventory-table').rows;
-        let grandTotal = 0;
-        for (let i = 0; i < rows.length; i++) {
-            const row = rows[i];
-            const startQty = parseFloat(row.querySelector('.start-qty').value) || 0;
-            const currentQty = parseFloat(row.querySelector('.current-qty').value) || 0;
-            const price = parseFloat(row.querySelector('.price').value) || 0;
-            const consumption = startQty - currentQty;
-            row.querySelector('.consumption').textContent = consumption.toFixed(2);
-            const total = consumption * price;
-            row.querySelector('.total').textContent = total.toFixed(2);
-            grandTotal += total;
-        }
-        document.getElementById('grand-total').textContent = `Teljes összeg: ${grandTotal.toFixed(2)} Ft`;
-    }
+// --- SZÁMÍTÁSI FÜGGVÉNYEK ---
+function updateAllCalculations() {
+    calculateTotals();
+    saveStateToLocalStorage();
+}
 
-    // --- ÚJ FUNKCIÓK A BEÁLLÍTÁSOK MENÜHÖZ ---
-    const settingsPanel = document.getElementById('settings-panel');
-    const sliders = {
-        name: document.getElementById('name-width-slider'),
-        qty: document.getElementById('qty-width-slider'),
-        price: document.getElementById('price-width-slider')
+function calculateInventory() {
+    let grandTotal = 0;
+    document.querySelectorAll('#inventory-table tr').forEach(row => {
+        const startQty = parseFloat(row.querySelector('.start-qty').value) || 0;
+        const addedQty = parseFloat(row.querySelector('.added-qty').value) || 0;
+        const currentQty = parseFloat(row.querySelector('.current-qty').value) || 0;
+        const price = parseFloat(row.querySelector('.price').value) || 0;
+        
+        const totalQty = startQty + addedQty;
+        // !!! MÓDOSÍTOTT LOGIKA KÉRÉS SZERINT !!!
+        // A fogyás az eredeti (Kezdő - Jelenlegi), az "Áru +" ezt nem befolyásolja.
+        const consumption = startQty - currentQty;
+        const total = consumption * price;
+
+        row.querySelector('.total-qty').textContent = totalQty.toFixed(2);
+        row.querySelector('.consumption').textContent = consumption.toFixed(2);
+        row.querySelector('.total').textContent = total.toLocaleString('hu-HU');
+        grandTotal += total;
+    });
+    return grandTotal;
+}
+
+function calculateCashInTill() {
+    let cashTotal = 0;
+    denominations.forEach(d => {
+        cashTotal += (parseFloat(document.getElementById(`note-${d}`).value) || 0) * d;
+    });
+    const cardTotal = parseFloat(document.getElementById('card-payment').value) || 0;
+    return cashTotal + cardTotal;
+}
+
+function calculateTotals() {
+    const salesTotal = calculateInventory();
+    const cashInTill = calculateCashInTill();
+    const bankAmount = parseFloat(document.getElementById('bank-amount').value) || 0;
+    const expenseAmount = parseFloat(document.getElementById('expense-amount').value) || 0;
+    
+    const actualRevenue = cashInTill - bankAmount;
+    const difference = actualRevenue - salesTotal;
+    const netRevenue = actualRevenue - expenseAmount;
+
+    document.getElementById('sales-total').querySelector('span:last-child').textContent = `${salesTotal.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`;
+    document.getElementById('revenue-total').querySelector('span:last-child').textContent = `${actualRevenue.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`;
+    document.getElementById('net-revenue').querySelector('span:last-child').textContent = `${netRevenue.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`;
+    
+    const diffElement = document.getElementById('difference');
+    const diffValueSpan = diffElement.querySelector('span:last-child');
+    diffValueSpan.textContent = `${difference.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`;
+    diffElement.className = "total-display";
+    if (difference > 0.01) diffElement.classList.add('positive');
+    else if (difference < -0.01) diffElement.classList.add('negative');
+}
+
+
+// --- FELÜLETKEZELÉS ---
+function addRow(item = { name: '', price: '', start: '', added: '', current: '' }) {
+    const tableBody = document.getElementById('inventory-table');
+    const row = tableBody.insertRow();
+    row.innerHTML = `
+        <td><input type="text" class="item-name" placeholder="Ital neve..." value="${item.name}" oninput="updateAllCalculations()"></td>
+        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value="${item.start}"></td>
+        <td><input type="number" step="0.01" class="added-qty" oninput="updateAllCalculations()" value="${item.added}"></td>
+        <td class="calculated total-qty">0.00</td>
+        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value="${item.current}"></td>
+        <td class="calculated consumption">0.00</td>
+        <td><input type="number" class="price" oninput="updateAllCalculations()" value="${item.price}"></td>
+        <td class="calculated total">0</td>`;
+}
+
+function saveDataAsFile() {
+    if(!confirm("A jelenlegi állapot egy letölthető HTML fájlként lesz elmentve. Folytatod?")) return;
+    saveStateToLocalStorage();
+    const currentState = loadStateFromLocalStorage();
+    const fileContent = document.documentElement.outerHTML.replace('const savedData = null;', `const savedData = ${JSON.stringify(currentState, null, 4)};`);
+    const blob = new Blob([fileContent], { type: 'text/html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    const date = new Date();
+    const filename = `placc_lap_${date.getFullYear()}${String(date.getMonth()+1).padStart(2,'0')}${String(date.getDate()).padStart(2,'0')}.html`;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+}
+
+// --- BEÁLLÍTÁSOK LOGIKÁJA ---
+function toggleSettings() {
+    document.getElementById('settings-panel').classList.toggle('visible');
+}
+
+function getContrastYIQ(hexcolor){
+    hexcolor = hexcolor.replace("#", "");
+    const r = parseInt(hexcolor.substr(0,2),16);
+    const g = parseInt(hexcolor.substr(2,2),16);
+    const b = parseInt(hexcolor.substr(4,2),16);
+    const yiq = ((r*299)+(g*587)+(b*114))/1000;
+    return (yiq >= 128) ? '#212529' : '#ffffff';
+}
+
+function applySettings(settings) {
+    document.documentElement.style.setProperty('--bg-color', settings.bgColor);
+    document.documentElement.style.setProperty('--container-bg', settings.bgColor);
+    document.documentElement.style.setProperty('--text-color', settings.textColor);
+    document.documentElement.style.setProperty('--item-name-width', `${settings.colWidth}%`);
+    
+    document.getElementById('bg-color-picker').value = settings.bgColor;
+    document.getElementById('text-color-picker').value = settings.textColor;
+    document.getElementById('col-width-slider').value = settings.colWidth;
+}
+
+function saveSettings() {
+    const settings = {
+        bgColor: document.getElementById('bg-color-picker').value,
+        textColor: document.getElementById('text-color-picker').value,
+        colWidth: document.getElementById('col-width-slider').value
     };
-    const displays = {
-        name: document.getElementById('name-width-display'),
-        qty: document.getElementById('qty-width-display'),
-        price: document.getElementById('price-width-display')
-    };
+    localStorage.setItem('placc_lap_settings', JSON.stringify(settings));
+    applySettings(settings);
+}
 
-    function toggleSettings() {
-        settingsPanel.classList.toggle('visible');
-    }
 
-    function applyColumnWidths(settings) {
-        const styleEl = document.getElementById('dynamic-styles');
-        // A Fogyás és Összeg oszlopok a maradék helyen osztoznak
-        const remainingWidth = 100 - settings.name - (settings.qty * 2) - settings.price;
-        const autoWidth = remainingWidth / 2;
+// --- OLDAL BETÖLTÉSE ---
+const savedData = null; 
+window.onload = function() {
+    // Kassza táblázat létrehozása
+    let cashTableHTML = `
+        <tr><td style="font-weight: bold; background-color: #f0f0f0;">Bank (Kassza nyitó)</td><td><input type="number" id="bank-amount" oninput="updateAllCalculations()" placeholder="Nyitó pénzösszeg..."></td></tr>
+        <tr><td style="font-weight: bold; background-color: #f0f0f0;">Kiadás</td><td><input type="number" id="expense-amount" oninput="updateAllCalculations()" placeholder="Kifizetések összege..."></td></tr>
+    `;
+    denominations.forEach(d => {
+        cashTableHTML += `<tr><td>${d.toLocaleString('hu-HU')} Ft</td><td><input type="number" id="note-${d}" class="denomination-qty" oninput="updateAllCalculations()" placeholder="Darabszám..."></td></tr>`;
+    });
+    cashTableHTML += `<tr><td style="font-weight: bold;">Bankkártya (Ft)</td><td><input type="number" id="card-payment" oninput="updateAllCalculations()" placeholder="Bankkártyás bevétel..."></td></tr>`;
+    document.getElementById('cash-table-container').innerHTML = cashTableHTML;
 
-        styleEl.innerHTML = `
-            table th:nth-child(1), table td:nth-child(1) { width: ${settings.name}%; }
-            table th:nth-child(2), table td:nth-child(2) { width: ${settings.qty}%; }
-            table th:nth-child(3), table td:nth-child(3) { width: ${settings.qty}%; }
-            table th:nth-child(4), table td:nth-child(4) { width: ${autoWidth}%; }
-            table th:nth-child(5), table td:nth-child(5) { width: ${settings.price}%; }
-            table th:nth-child(6), table td:nth-child(6) { width: ${autoWidth}%; }
-        `;
-        // Frissítjük a kijelzőket is
-        displays.name.textContent = `${settings.name}%`;
-        displays.qty.textContent = `${settings.qty}%`;
-        displays.price.textContent = `${settings.price}%`;
-    }
+    // Adatok betöltése
+    const autoSavedState = loadStateFromLocalStorage();
+    const dataToLoad = autoSavedState || (savedData ? { inventory: savedData.inventory, cash: savedData.cash } : { inventory: defaultItems, cash: {} });
 
-    function saveSettings() {
-        const settings = {
-            name: sliders.name.value,
-            qty: sliders.qty.value,
-            price: sliders.price.value
-        };
-        localStorage.setItem('placcColumnSettings', JSON.stringify(settings));
+    if (dataToLoad.inventory && dataToLoad.inventory.length > 0) {
+        dataToLoad.inventory.forEach(item => addRow(item));
+    } else {
+        defaultItems.forEach(item => addRow(item));
     }
     
-    function updateColumnWidths() {
-        const settings = {
-            name: parseInt(sliders.name.value),
-            qty: parseInt(sliders.qty.value),
-            price: parseInt(sliders.price.value)
-        };
-        applyColumnWidths(settings);
-        saveSettings(); // Minden változtatáskor mentünk
+    if (dataToLoad.cash) {
+        denominations.forEach(d => { document.getElementById(`note-${d}`).value = dataToLoad.cash[`note_${d}`] || ''; });
+        document.getElementById('card-payment').value = dataToLoad.cash.card_payment || '';
+        document.getElementById('bank-amount').value = dataToLoad.cash.bank_amount || '';
+        document.getElementById('expense-amount').value = dataToLoad.cash.expense_amount || '';
     }
 
-    function loadSettings() {
-        const savedSettings = localStorage.getItem('placcColumnSettings');
-        let settings = { name: 35, qty: 15, price: 15 }; // Alapértelmezett értékek
+    // Beállítások betöltése és eseménykezelők
+    const savedSettings = JSON.parse(localStorage.getItem('placc_lap_settings')) || { bgColor: '#ffffff', textColor: '#212529', colWidth: 30 };
+    applySettings(savedSettings);
 
-        if (savedSettings) {
-            settings = JSON.parse(savedSettings);
+    const bgColorPicker = document.getElementById('bg-color-picker');
+    const textColorPicker = document.getElementById('text-color-picker');
+    const autoColorToggle = document.getElementById('auto-text-color-toggle');
+    const colWidthSlider = document.getElementById('col-width-slider');
+    
+    bgColorPicker.addEventListener('input', () => {
+        if (autoColorToggle.checked) {
+            textColorPicker.value = getContrastYIQ(bgColorPicker.value);
         }
-
-        sliders.name.value = settings.name;
-        sliders.qty.value = settings.qty;
-        sliders.price.value = settings.price;
-
-        applyColumnWidths(settings);
-    }
-
-    // --- OLDAL BETÖLTÉSE ---
-    window.onload = function() {
-        // Tételek betöltése
-        defaultItems.forEach(item => {
-            addRow(item.name, item.pricePerUnit);
-        });
-        addRow(); // Üres sor a végére
-
-        // Oszlopszélességek betöltése
-        loadSettings();
-    };
+        saveSettings();
+    });
+    textColorPicker.addEventListener('input', () => {
+        autoColorToggle.checked = false;
+        saveSettings();
+    });
+    autoColorToggle.addEventListener('change', () => {
+        if (autoColorToggle.checked) {
+            textColorPicker.value = getContrastYIQ(bgColorPicker.value);
+        }
+        saveSettings();
+    });
+    colWidthSlider.addEventListener('input', saveSettings);
+    
+    calculateTotals();
+};
 </script>
-
 </body>
 </html>
