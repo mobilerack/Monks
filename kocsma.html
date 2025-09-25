@@ -511,10 +511,7 @@ function clearAllData() {
     }
 }
 
-function updateAllCalculations() {
-    calculateTotals();
-    saveStateToLocalStorage();
-}
+function updateAllCalculations() { calculateTotals(); saveStateToLocalStorage(); }
 
 function calculateInventory() {
     let grandTotal = 0;
@@ -548,11 +545,9 @@ function calculateTotals() {
     const actualRevenue = cashInTill - bankAmount;
     const difference = actualRevenue - salesTotal;
     const netRevenue = actualRevenue - expenseAmount;
-
     document.getElementById('sales-total').querySelector('span:last-child').textContent = `${salesTotal.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`;
     document.getElementById('revenue-total').querySelector('span:last-child').textContent = `${actualRevenue.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`;
     document.getElementById('net-revenue').querySelector('span:last-child').textContent = `${netRevenue.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`;
-    
     const diffElement = document.getElementById('difference');
     const diffValueSpan = diffElement.querySelector('span:last-child');
     diffValueSpan.textContent = `${difference.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`;
@@ -589,30 +584,34 @@ function saveDataAsFile() {
 }
 
 const savedData = null;
+/*** JAVÍTOTT BETÖLTÉSI LOGIKA ***/
 window.onload = function() {
     let cashTableHTML = `
         <tr><td style="font-weight: bold; background-color: #f0f0f0;">Bank (Kassza nyitó)</td><td><input type="number" id="bank-amount" oninput="updateAllCalculations()" placeholder="Nyitó pénzösszeg..."></td></tr>
-        <tr><td style="font-weight: bold; background-color: #f0f0f0;">Kiadás</td><td><input type="number" id="expense-amount" oninput="updateAllCalculations()" placeholder="Kifizetések összege..."></td></tr>
-    `;
+        <tr><td style="font-weight: bold; background-color: #f0f0f0;">Kiadás</td><td><input type="number" id="expense-amount" oninput="updateAllCalculations()" placeholder="Kifizetések összege..."></td></tr>`;
     denominations.forEach(d => {
         cashTableHTML += `<tr><td>${d.toLocaleString('hu-HU')} Ft</td><td><input type="number" id="note-${d}" class="denomination-qty" oninput="updateAllCalculations()" placeholder="Darabszám..."></td></tr>`;
     });
     cashTableHTML += `<tr><td style="font-weight: bold;">Bankkártya (Ft)</td><td><input type="number" id="card-payment" oninput="updateAllCalculations()" placeholder="Bankkártyás bevétel..."></td></tr>`;
     document.getElementById('cash-table-container').innerHTML = cashTableHTML;
 
+    let itemsToDisplay = defaultItems;
     const autoSavedState = loadStateFromLocalStorage();
-    const dataToLoad = autoSavedState || (savedData ? { inventory: savedData.inventory, cash: savedData.cash } : { inventory: defaultItems, cash: {} });
-    if (dataToLoad.inventory && dataToLoad.inventory.length > 0) {
-        dataToLoad.inventory.forEach(item => addRow(item));
-    } else {
-        defaultItems.forEach(item => addRow(item));
+
+    if (autoSavedState && autoSavedState.inventory && autoSavedState.inventory.length > 0) {
+        itemsToDisplay = autoSavedState.inventory;
     }
-    if (dataToLoad.cash) {
-        denominations.forEach(d => { document.getElementById(`note-${d}`).value = dataToLoad.cash[`note_${d}`] || ''; });
-        document.getElementById('card-payment').value = dataToLoad.cash.card_payment || '';
-        document.getElementById('bank-amount').value = dataToLoad.cash.bank_amount || '';
-        document.getElementById('expense-amount').value = dataToLoad.cash.expense_amount || '';
+
+    itemsToDisplay.forEach(item => addRow(item));
+
+    if (autoSavedState && autoSavedState.cash) {
+        const cashData = autoSavedState.cash;
+        denominations.forEach(d => { document.getElementById(`note-${d}`).value = cashData[`note_${d}`] || ''; });
+        document.getElementById('card-payment').value = cashData.card_payment || '';
+        document.getElementById('bank-amount').value = cashData.bank_amount || '';
+        document.getElementById('expense-amount').value = cashData.expense_amount || '';
     }
+    
     calculateTotals();
 };
 </script>
