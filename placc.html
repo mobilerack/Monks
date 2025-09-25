@@ -671,6 +671,31 @@ function calculateInventory() {
     return grandTotal;
 }
 
+function calculateInventory() {
+    let grandTotal = 0;
+    document.querySelectorAll('#inventory-table tr').forEach(row => {
+        const startQty = parseFloat(row.querySelector('.start-qty').value) || 0;
+        
+        // --- EZEK AZ ÚJ LOGIKA SORAI ---
+        const addedQty = parseFloat(row.querySelector('.added-qty').value) || 0; // 1. Beolvassa az "Áru +" értékét
+        const totalQty = startQty + addedQty; // 2. Kiszámolja az "Összes"-t
+        const consumption = startQty - currentQty; // 3. A Fogyás a régi logika szerint számolódik
+        // --- EDDIG TART ---
+
+        const currentQty = parseFloat(row.querySelector('.current-qty').value) || 0;
+        const price = parseFloat(row.querySelector('.price').value) || 0;
+        const total = consumption * price;
+
+        // --- ÚJ ÉRTÉK MEGJELENÍTÉSE ---
+        row.querySelector('.total-qty').textContent = totalQty.toFixed(2); // 4. Beírja a kiszámolt "Összes" értéket a cellába
+        
+        row.querySelector('.consumption').textContent = consumption.toFixed(2);
+        row.querySelector('.total').textContent = total.toLocaleString('hu-HU');
+        grandTotal += total;
+    });
+    return grandTotal;
+}
+
 function calculateCashInTill() {
     let cashTotal = 0;
     denominations.forEach(d => {
@@ -721,6 +746,19 @@ function addRow(item = { name: '', price: '', start: '', current: '' }) {
         <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value="${item.current}"></td>
         <td class="calculated consumption">0.00</td>
         <td><input type="number" class="price" oninput="updateAllCalculations()" value="${item.price}"></td>
+        <td class="calculated total">0</td>`;
+}
+function addRow(item = { /*...*/ }) {
+    // ...
+    row.innerHTML = `
+        <td><input type="text" class="item-name" ...></td>
+        <td><input type="number" class="start-qty" ...></td>
+        
+        <td><input type="number" step="0.01" class="added-qty" oninput="updateAllCalculations()" value="${item.added}"></td>
+        <td class="calculated total-qty">0.00</td>
+        <td><input type="number" class="current-qty" ...></td>
+        <td class="calculated consumption">0.00</td>
+        <td><input type="number" class="price" ...></td>
         <td class="calculated total">0</td>`;
 }
 
