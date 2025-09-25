@@ -24,12 +24,18 @@
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid var(--border-color); padding: 12px 8px; text-align: right; vertical-align: middle; }
         th { background-color: var(--header-bg); color: white; text-align: center; }
-        th:first-child, td:first-child { text-align: left; font-weight: bold; width: 30%; }
+        /* KISZÉLESÍTETT ELSŐ OSZLOP */
+        th:first-child, td:first-child { 
+            text-align: left; 
+            font-weight: bold; 
+            width: 30%; /* Szélesebb oszlop a neveknek */
+        }
         input {
             width: 95%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px;
             box-sizing: border-box; text-align: right; font-size: 1em;
             background-color: var(--container-bg); color: var(--text-color);
         }
+        /* A név beviteli mezője is balra igazított */
         td:first-child input { text-align: left; }
         .calculated { background-color: rgba(128,128,128,0.1); font-weight: bold; font-size: 1.1em; }
         .button-container { text-align: center; margin-top: 20px; }
@@ -93,385 +99,36 @@
     </div>
 </div>
 <script>
+// A böngészőben elmentett adatok felülíródnak ezzel, ha a "Teljes Törlés" gombra kattintasz.
 const defaultItems = [
-    {
-        "name": "Napóleon",
-        "price": "7000",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Cherry",
-        "price": "6000",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Vodka",
-        "price": "11000",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Törköly",
-        "price": "12000",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Hubertus",
-        "price": "12000",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Jéger",
-        "price": "16000",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Jim Beam",
-        "price": "16000",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Unicum",
-        "price": "16000",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Vili",
-        "price": "13000",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Porto",
-        "price": "18000",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Mák",
-        "price": "23000",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Becherovka",
-        "price": "13000",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Birs",
-        "price": "20000",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Tátra",
-        "price": "18000",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Jack Deniels",
-        "price": "19000",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Csapolt",
-        "price": "1200",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Rákóczi",
-        "price": "410",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Kőbányai",
-        "price": "460",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Soproni",
-        "price": "570",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Borsodi",
-        "price": "510",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Arany Ászok",
-        "price": "520",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Bak",
-        "price": "600",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Dreher",
-        "price": "580",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Heineken",
-        "price": "650",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Somersby",
-        "price": "770",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Dr meggy",
-        "price": "670",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Dr ment",
-        "price": "520",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Dob Köb",
-        "price": "480",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Staro",
-        "price": "650",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Peroni",
-        "price": "630",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Bacardi",
-        "price": "13000",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Bika",
-        "price": "2200",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Rizling",
-        "price": "2200",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Rosé",
-        "price": "2200",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Irsai",
-        "price": "2200",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Orosz",
-        "price": "1800",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Szürke",
-        "price": "2200",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Szóda",
-        "price": "300",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Coca",
-        "price": "450",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Top joy",
-        "price": "380",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Hell",
-        "price": "450",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "2/1",
-        "price": "1000",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Rostos",
-        "price": "1200",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Kv",
-        "price": "310",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Forró",
-        "price": "350",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Cappucino",
-        "price": "350",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Tejpor",
-        "price": "40",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Tejszín",
-        "price": "40",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Hab",
-        "price": "90",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Tea",
-        "price": "350",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Dr cit",
-        "price": "400",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Ropi",
-        "price": "170",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Sport",
-        "price": "310",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Balcsi",
-        "price": "270",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Tic tac",
-        "price": "360",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Rágó",
-        "price": "400",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Mogyi",
-        "price": "430",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Chips",
-        "price": "650",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Gyufa",
-        "price": "50",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Pzs",
-        "price": "120",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Milka",
-        "price": "650",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Szotyi",
-        "price": "310",
-        "start": "",
-        "current": ""
-    },
-    {
-        "name": "Tökmag",
-        "price": "450",
-        "start": "",
-        "current": ""
-    }
+    // Röviditalok
+    {"name": "Napóleon", "price": "7000"}, {"name": "Cherry", "price": "6000"}, {"name": "Vodka", "price": "11000"},
+    {"name": "Törköly", "price": "12000"}, {"name": "Hubertus", "price": "12000"}, {"name": "Jägermeister", "price": "16000"},
+    {"name": "Jim Beam", "price": "16000"}, {"name": "Unicum", "price": "16000"}, {"name": "Vilmoskörte", "price": "13000"},
+    {"name": "Porto", "price": "18000"}, {"name": "Mák", "price": "23000"}, {"name": "Becherovka", "price": "13000"},
+    {"name": "Birs", "price": "20000"}, {"name": "Tátra", "price": "18000"}, {"name": "Jack Daniels", "price": "19000"},
+    {"name": "Bacardi", "price": "13000"},
+    // Sörök
+    {"name": "Csapolt sör", "price": "1200"}, {"name": "Rákóczi", "price": "410"}, {"name": "Kőbányai", "price": "460"},
+    {"name": "Soproni", "price": "570"}, {"name": "Borsodi", "price": "510"}, {"name": "Arany Ászok", "price": "520"},
+    {"name": "Bak", "price": "600"}, {"name": "Dreher", "price": "580"}, {"name": "Heineken", "price": "650"},
+    {"name": "Somersby", "price": "770"}, {"name": "Dreher Meggy", "price": "670"}, {"name": "Dreher Menta", "price": "520"},
+    {"name": "Dobozos Kőbányai", "price": "480"}, {"name": "Staropramen", "price": "650"}, {"name": "Peroni", "price": "630"},
+    {"name": "Dreher Citrom (alk. mentes)", "price": "400"},
+    // Borok és pezsgők
+    {"name": "Bikavér", "price": "2200"}, {"name": "Rizling", "price": "2200"}, {"name": "Rosé", "price": "2200"},
+    {"name": "Irsai", "price": "2200"}, {"name": "Orosz pezsgő", "price": "1800"}, {"name": "Szürkebarát", "price": "2200"},
+    // Üdítők és egyéb
+    {"name": "Szóda", "price": "300"}, {"name": "Coca-Cola (0.25l)", "price": "450"}, {"name": "Top Joy", "price": "380"},
+    {"name": "Hell energiaital", "price": "450"}, {"name": "2/1 Üdítő", "price": "1000"}, {"name": "Rostos lé", "price": "1200"},
+    {"name": "Kávé", "price": "310"}, {"name": "Forró csoki", "price": "350"}, {"name": "Cappucino", "price": "350"},
+    {"name": "Tejpor", "price": "40"}, {"name": "Tejszín", "price": "40"}, {"name": "Tejszínhab", "price": "90"},
+    {"name": "Tea", "price": "350"},
+    // Rágcsák, egyéb
+    {"name": "Ropi", "price": "170"}, {"name": "Sport szelet", "price": "310"}, {"name": "Balaton szelet", "price": "270"},
+    {"name": "Tic Tac", "price": "360"}, {"name": "Rágó", "price": "400"}, {"name": "Mogyoró", "price": "430"},
+    {"name": "Chips", "price": "650"}, {"name": "Gyufa", "price": "50"}, {"name": "Papírzsebkendő", "price": "120"},
+    {"name": "Milka csoki", "price": "650"}, {"name": "Szotyi", "price": "310"}, {"name": "Tökmag", "price": "450"}
 ];
 const denominations = [20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10, 5];
 
@@ -497,7 +154,7 @@ function loadStateFromLocalStorage() {
 
 function startNewShift() {
     if (!confirm("Biztosan új elszámolást (placcot) szeretnél kezdeni?\nA tételek és árak megmaradnak, de a mennyiségek és a kassza adatai törlődnek.")) return;
-    const currentData = loadStateFromLocalStorage() || { inventory: defaultItems, cash: {} };
+    const currentData = loadStateFromLocalStorage() || { inventory: defaultItems.map(item => ({...item, start: '', current: ''})), cash: {} };
     currentData.inventory.forEach(item => { item.start = ''; item.current = ''; });
     currentData.cash = {};
     localStorage.setItem('csaposlap_autosave', JSON.stringify(currentData));
@@ -522,7 +179,7 @@ function calculateInventory() {
         const consumption = startQty - currentQty;
         const total = consumption * price;
         row.querySelector('.consumption').textContent = consumption.toFixed(2);
-        row.querySelector('.total').textContent = total.toLocaleString('hu-HU');
+        row.querySelector('.total').textContent = Math.round(total).toLocaleString('hu-HU');
         grandTotal += total;
     });
     return grandTotal;
@@ -540,17 +197,23 @@ function calculateCashInTill() {
 function calculateTotals() {
     const salesTotal = calculateInventory();
     const cashInTill = calculateCashInTill();
+    // ÚJ LOGIKA: Bank (nyitó) és Kiadás beolvasása
     const bankAmount = parseFloat(document.getElementById('bank-amount').value) || 0;
     const expenseAmount = parseFloat(document.getElementById('expense-amount').value) || 0;
+    
+    // ÚJ LOGIKA: Számítások
     const actualRevenue = cashInTill - bankAmount;
     const difference = actualRevenue - salesTotal;
     const netRevenue = actualRevenue - expenseAmount;
-    document.getElementById('sales-total').querySelector('span:last-child').textContent = `${salesTotal.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`;
-    document.getElementById('revenue-total').querySelector('span:last-child').textContent = `${actualRevenue.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`;
-    document.getElementById('net-revenue').querySelector('span:last-child').textContent = `${netRevenue.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`;
+
+    // Megjelenítés
+    document.getElementById('sales-total').querySelector('span:last-child').textContent = `${Math.round(salesTotal).toLocaleString('hu-HU')} Ft`;
+    document.getElementById('revenue-total').querySelector('span:last-child').textContent = `${Math.round(actualRevenue).toLocaleString('hu-HU')} Ft`;
+    document.getElementById('net-revenue').querySelector('span:last-child').textContent = `${Math.round(netRevenue).toLocaleString('hu-HU')} Ft`;
+    
     const diffElement = document.getElementById('difference');
     const diffValueSpan = diffElement.querySelector('span:last-child');
-    diffValueSpan.textContent = `${difference.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`;
+    diffValueSpan.textContent = `${Math.round(difference).toLocaleString('hu-HU')} Ft`;
     diffElement.className = "total-display";
     if (difference > 0) diffElement.classList.add('positive');
     else if (difference < 0) diffElement.classList.add('negative');
@@ -559,12 +222,13 @@ function calculateTotals() {
 function addRow(item = { name: '', price: '', start: '', current: '' }) {
     const tableBody = document.getElementById('inventory-table');
     const row = tableBody.insertRow();
+    // step="0.01" hozzáadva a tizedes értékekhez
     row.innerHTML = `
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="${item.name}" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value="${item.start}"></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value="${item.current}"></td>
+        <td><input type="text" class="item-name" placeholder="Ital neve..." value="${item.name || ''}" oninput="updateAllCalculations()"></td>
+        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value="${item.start || ''}"></td>
+        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value="${item.current || ''}"></td>
         <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="${item.price}"></td>
+        <td><input type="number" class="price" oninput="updateAllCalculations()" value="${item.price || ''}"></td>
         <td class="calculated total">0</td>`;
 }
 
@@ -572,7 +236,8 @@ function saveDataAsFile() {
     if(!confirm("A jelenlegi állapot egy letölthető HTML fájlként lesz elmentve. A böngésző elindíthatja a letöltést. Folytatod?")) return;
     saveStateToLocalStorage();
     const currentState = loadStateFromLocalStorage();
-    const fileContent = document.documentElement.outerHTML.replace('const savedData = null;', `const savedData = ${JSON.stringify(currentState, null, 4)};`);
+    // A 'null' helyett egy üres objektumot használunk, hogy a mentett fájl is működőképes legyen
+    const fileContent = document.documentElement.outerHTML.replace('const savedData = {};', `const savedData = ${JSON.stringify(currentState, null, 4)};`);
     const blob = new Blob([fileContent], { type: 'text/html' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -583,33 +248,49 @@ function saveDataAsFile() {
     URL.revokeObjectURL(a.href);
 }
 
-const savedData = null;
+// Ez a változó a letöltött fájlban lesz felülírva a mentett adatokkal
+const savedData = {};
+
 /*** JAVÍTOTT BETÖLTÉSI LOGIKA ***/
 window.onload = function() {
+    // ÚJ Kassza tábla felépítése Bank és Kiadás sorokkal
     let cashTableHTML = `
         <tr><td style="font-weight: bold; background-color: #f0f0f0;">Bank (Kassza nyitó)</td><td><input type="number" id="bank-amount" oninput="updateAllCalculations()" placeholder="Nyitó pénzösszeg..."></td></tr>
-        <tr><td style="font-weight: bold; background-color: #f0f0f0;">Kiadás</td><td><input type="number" id="expense-amount" oninput="updateAllCalculations()" placeholder="Kifizetések összege..."></td></tr>`;
+        <tr><td style="font-weight: bold; background-color: #f0f0f0;">Kiadás</td><td><input type="number" id="expense-amount" oninput="updateAllCalculations()" placeholder="Kifizetések összege..."></td></tr>
+        <tr><td colspan="2" style="background-color: #e9ecef; text-align: center; font-weight: bold;">Kasszában lévő pénz</td></tr>`;
     denominations.forEach(d => {
         cashTableHTML += `<tr><td>${d.toLocaleString('hu-HU')} Ft</td><td><input type="number" id="note-${d}" class="denomination-qty" oninput="updateAllCalculations()" placeholder="Darabszám..."></td></tr>`;
     });
     cashTableHTML += `<tr><td style="font-weight: bold;">Bankkártya (Ft)</td><td><input type="number" id="card-payment" oninput="updateAllCalculations()" placeholder="Bankkártyás bevétel..."></td></tr>`;
     document.getElementById('cash-table-container').innerHTML = cashTableHTML;
 
-    let itemsToDisplay = defaultItems;
+    let dataToLoad;
     const autoSavedState = loadStateFromLocalStorage();
 
-    if (autoSavedState && autoSavedState.inventory && autoSavedState.inventory.length > 0) {
-        itemsToDisplay = autoSavedState.inventory;
+    // Prioritási sorrend: 1. Automatikusan mentett állapot. 2. Fájlból mentett állapot. 3. Alapértelmezett lista.
+    if (autoSavedState) {
+        dataToLoad = autoSavedState;
+    } else if (savedData && Object.keys(savedData).length > 0) {
+        dataToLoad = savedData;
+    } else {
+        // Ha semmilyen mentés nincs, az alapértelmezett listát használjuk, üres mennyiségekkel
+        dataToLoad = { inventory: defaultItems.map(item => ({...item, start: '', current: ''})), cash: {} };
     }
 
-    itemsToDisplay.forEach(item => addRow(item));
+    // Biztosítjuk, hogy az inventory létezzen és legyen benne tartalom. Ha valamiért üres, alapértelmezettre vált.
+    if (!dataToLoad.inventory || dataToLoad.inventory.length === 0) {
+        dataToLoad.inventory = defaultItems.map(item => ({...item, start: '', current: ''}));
+    }
 
-    if (autoSavedState && autoSavedState.cash) {
-        const cashData = autoSavedState.cash;
-        denominations.forEach(d => { document.getElementById(`note-${d}`).value = cashData[`note_${d}`] || ''; });
-        document.getElementById('card-payment').value = cashData.card_payment || '';
-        document.getElementById('bank-amount').value = cashData.bank_amount || '';
-        document.getElementById('expense-amount').value = cashData.expense_amount || '';
+    dataToLoad.inventory.forEach(item => addRow(item));
+    
+    // Kassza adatok betöltése
+    if (dataToLoad.cash) {
+        const cashData = dataToLoad.cash;
+        denominations.forEach(d => { if(document.getElementById(`note-${d}`)) document.getElementById(`note-${d}`).value = cashData[`note_${d}`] || ''; });
+        if(document.getElementById('card-payment')) document.getElementById('card-payment').value = cashData.card_payment || '';
+        if(document.getElementById('bank-amount')) document.getElementById('bank-amount').value = cashData.bank_amount || '';
+        if(document.getElementById('expense-amount')) document.getElementById('expense-amount').value = cashData.expense_amount || '';
     }
     
     calculateTotals();
