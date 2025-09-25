@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Csapos Elszámoló</title>
+    <style id="dynamic-styles"></style>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -19,6 +20,7 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative; /* A beállítások panel pozicionálásához */
         }
         h1 {
             text-align: center;
@@ -28,11 +30,13 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            table-layout: fixed; /* Fontos a szélességek pontos beállításához */
         }
         th, td {
             border: 1px solid #ddd;
-            padding: 12px;
+            padding: 12px 8px; /* Kisebb padding a jobb olvashatóságért mobilon */
             text-align: right;
+            word-wrap: break-word; /* Hosszú szavak tördelése */
         }
         th {
             background-color: #007bff;
@@ -43,12 +47,13 @@
             text-align: left;
         }
         input[type="text"], input[type="number"] {
-            width: 90%;
+            width: 95%;
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
             text-align: right;
+            font-size: 1em; /* Kicsit nagyobb betűméret */
         }
         .item-name {
             text-align: left;
@@ -80,18 +85,92 @@
             font-size: 1.5em;
             font-weight: bold;
         }
+
+        /* --- BEÁLLÍTÁSOK MENÜ STÍLUSAI --- */
+        .settings-container {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+        .settings-toggle {
+            font-size: 1.8em;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0 10px;
+            color: #555;
+            transition: transform 0.2s;
+        }
+        .settings-toggle:hover {
+            transform: rotate(45deg);
+        }
+        .settings-panel {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 100;
+            width: 280px;
+        }
+        .settings-panel.visible {
+            display: block;
+        }
+        .settings-panel h4 {
+            margin-top: 0;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .settings-panel label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .settings-panel input[type="range"] {
+            width: 100%;
+        }
+        .settings-panel .width-display {
+            text-align: right;
+            font-size: 0.8em;
+            color: #777;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <div class="settings-container">
+        <button class="settings-toggle" onclick="toggleSettings()">⚙️</button>
+        <div id="settings-panel" class="settings-panel">
+            <h4>Oszlopok Szélessége</h4>
+            
+            <label for="name-width-slider">Tétel neve</label>
+            <input type="range" id="name-width-slider" min="20" max="50" oninput="updateColumnWidths()">
+            <div id="name-width-display" class="width-display"></div>
+
+            <label for="qty-width-slider">Mennyiségek (Kezdő/Jelenlegi)</label>
+            <input type="range" id="qty-width-slider" min="10" max="25" oninput="updateColumnWidths()">
+            <div id="qty-width-display" class="width-display"></div>
+
+            <label for="price-width-slider">Ár</label>
+            <input type="range" id="price-width-slider" min="10" max="25" oninput="updateColumnWidths()">
+            <div id="price-width-display" class="width-display"></div>
+        </div>
+    </div>
+
     <h1>Csapos Elszámoló Lap</h1>
     <table>
         <thead>
             <tr>
-                <th style="width: 25%;">Tétel neve</th>
-                <th>1. Kezdő mennyiség (L/db)</th>
-                <th>2. Jelenlegi mennyiség (L/db)</th>
+                <th>Tétel neve</th>
+                <th>1. Kezdő (L/db)</th>
+                <th>2. Jelenlegi (L/db)</th>
                 <th>3. Fogyás (L/db)</th>
                 <th>4. Ár (Ft)</th>
                 <th>5. Összeg (Ft)</th>
@@ -107,79 +186,46 @@
 </div>
 
 <script>
-    // Alapértelmezett tételek a megadott lista alapján
     const defaultItems = [
-        { name: "Napóleon", pricePerUnit: 7000 },
-        { name: "Cherry", pricePerUnit: 6000 },
-        { name: "Vodka", pricePerUnit: 11000 },
-        { name: "Törköly", pricePerUnit: 12000 },
-        { name: "Hubertus", pricePerUnit: 12000 },
-        { name: "Jéger", pricePerUnit: 16000 },
-        { name: "Jim Beam", pricePerUnit: 16000 },
-        { name: "Unicum", pricePerUnit: 16000 },
-        { name: "Vili", pricePerUnit: 13000 },
-        { name: "Porto", pricePerUnit: 18000 },
-        { name: "Mák", pricePerUnit: 23000 },
-        { name: "Becherovka", pricePerUnit: 13000 },
-        { name: "Birs", pricePerUnit: 20000 },
-        { name: "Tátra", pricePerUnit: 18000 },
-        { name: "Jack Deniels", pricePerUnit: 19000 },
-        { name: "Csapolt", pricePerUnit: 1200 },
-        { name: "Rákóczi", pricePerUnit: 410 },
-        { name: "Kőbányai", pricePerUnit: 460 },
-        { name: "Soproni", pricePerUnit: 570 },
-        { name: "Borsodi", pricePerUnit: 510 },
-        { name: "Arany Ászok", pricePerUnit: 520 },
-        { name: "Bak", pricePerUnit: 600 },
-        { name: "Dreher", pricePerUnit: 580 },
-        { name: "Heineken", pricePerUnit: 650 },
-        { name: "Somersby", pricePerUnit: 770 },
-        { name: "Dr meggy", pricePerUnit: 670 },
-        { name: "Dr ment", pricePerUnit: 520 },
-        { name: "Dob Köb", pricePerUnit: 480 },
-        { name: "Staro", pricePerUnit: 650 },
-        { name: "Peroni", pricePerUnit: 630 },
-        { name: "Bacardi", pricePerUnit: 13000 },
-        { name: "Bika", pricePerUnit: 2200 },
-        { name: "Rizling", pricePerUnit: 2200 },
-        { name: "Rosé", pricePerUnit: 2200 },
-        { name: "Irsai", pricePerUnit: 2200 },
-        { name: "Orosz", pricePerUnit: 1800 },
-        { name: "Szürke", pricePerUnit: 2200 },
-        { name: "Szóda", pricePerUnit: 300 },
-        { name: "0,5 víz", pricePerUnit: 250 },
-        { name: "Coca", pricePerUnit: 450 },
-        { name: "Top joy", pricePerUnit: 380 },
-        { name: "Hell", pricePerUnit: 450 },
-        { name: "2/1", pricePerUnit: 1000 },
-        { name: "Rostos", pricePerUnit: 1200 },
-        { name: "0,33", pricePerUnit: 440 },
-        { name: "Kv", pricePerUnit: 310 },
-        { name: "Forró", pricePerUnit: 350 },
-        { name: "Cappucino", pricePerUnit: 350 },
-        { name: "Tejpor", pricePerUnit: 40 },
-        { name: "Tejszín", pricePerUnit: 40 },
-        { name: "Hab", pricePerUnit: 90 },
-        { name: "Tea", pricePerUnit: 350 },
-        { name: "Dr cit", pricePerUnit: 400 },
-        { name: "Ropi", pricePerUnit: 170 },
-        { name: "Sport", pricePerUnit: 310 },
-        { name: "Balcsi", pricePerUnit: 270 },
-        { name: "Tic tac", pricePerUnit: 360 },
-        { name: "Rágó", pricePerUnit: 400 },
-        { name: "Mogyi", pricePerUnit: 430 },
-        { name: "Chips", pricePerUnit: 650 },
-        { name: "Gyufa", pricePerUnit: 50 },
-        { name: "Pzs", pricePerUnit: 120 },
-        { name: "Milka", pricePerUnit: 650 },
-        { name: "Szotyi", pricePerUnit: 310 },
+        { name: "Napóleon", pricePerUnit: 7000 }, { name: "Cherry", pricePerUnit: 6000 },
+        { name: "Vodka", pricePerUnit: 11000 }, { name: "Törköly", pricePerUnit: 12000 },
+        { name: "Hubertus", pricePerUnit: 12000 }, { name: "Jéger", pricePerUnit: 16000 },
+        { name: "Jim Beam", pricePerUnit: 16000 }, { name: "Unicum", pricePerUnit: 16000 },
+        { name: "Vili", pricePerUnit: 13000 }, { name: "Porto", pricePerUnit: 18000 },
+        { name: "Mák", pricePerUnit: 23000 }, { name: "Becherovka", pricePerUnit: 13000 },
+        { name: "Birs", pricePerUnit: 20000 }, { name: "Tátra", pricePerUnit: 18000 },
+        { name: "Jack Deniels", pricePerUnit: 19000 }, { name: "Csapolt", pricePerUnit: 1200 },
+        { name: "Rákóczi", pricePerUnit: 410 }, { name: "Kőbányai", pricePerUnit: 460 },
+        { name: "Soproni", pricePerUnit: 570 }, { name: "Borsodi", pricePerUnit: 510 },
+        { name: "Arany Ászok", pricePerUnit: 520 }, { name: "Bak", pricePerUnit: 600 },
+        { name: "Dreher", pricePerUnit: 580 }, { name: "Heineken", pricePerUnit: 650 },
+        { name: "Somersby", pricePerUnit: 770 }, { name: "Dr meggy", pricePerUnit: 670 },
+        { name: "Dr ment", pricePerUnit: 520 }, { name: "Dob Köb", pricePerUnit: 480 },
+        { name: "Staro", pricePerUnit: 650 }, { name: "Peroni", pricePerUnit: 630 },
+        { name: "Bacardi", pricePerUnit: 13000 }, { name: "Bika", pricePerUnit: 2200 },
+        { name: "Rizling", pricePerUnit: 2200 }, { name: "Rosé", pricePerUnit: 2200 },
+        { name: "Irsai", pricePerUnit: 2200 }, { name: "Orosz", pricePerUnit: 1800 },
+        { name: "Szürke", pricePerUnit: 2200 }, { name: "Szóda", pricePerUnit: 300 },
+        { name: "0,5 víz", pricePerUnit: 250 }, { name: "Coca", pricePerUnit: 450 },
+        { name: "Top joy", pricePerUnit: 380 }, { name: "Hell", pricePerUnit: 450 },
+        { name: "2/1", pricePerUnit: 1000 }, { name: "Rostos", pricePerUnit: 1200 },
+        { name: "0,33", pricePerUnit: 440 }, { name: "Kv", pricePerUnit: 310 },
+        { name: "Forró", pricePerUnit: 350 }, { name: "Cappucino", pricePerUnit: 350 },
+        { name: "Tejpor", pricePerUnit: 40 }, { name: "Tejszín", pricePerUnit: 40 },
+        { name: "Hab", pricePerUnit: 90 }, { name: "Tea", pricePerUnit: 350 },
+        { name: "Dr cit", pricePerUnit: 400 }, { name: "Ropi", pricePerUnit: 170 },
+        { name: "Sport", pricePerUnit: 310 }, { name: "Balcsi", pricePerUnit: 270 },
+        { name: "Tic tac", pricePerUnit: 360 }, { name: "Rágó", pricePerUnit: 400 },
+        { name: "Mogyi", pricePerUnit: 430 }, { name: "Chips", pricePerUnit: 650 },
+        { name: "Gyufa", pricePerUnit: 50 }, { name: "Pzs", pricePerUnit: 120 },
+        { name: "Milka", pricePerUnit: 650 }, { name: "Szotyi", pricePerUnit: 310 },
         { name: "Tökmag", pricePerUnit: 450 }
     ];
 
+    // --- MEGLÉVŐ FUNKCIÓK (VÁLTOZATLAN) ---
     function addRow(name = '', price = '') {
         const tableBody = document.getElementById('inventory-table');
         const row = tableBody.insertRow();
-
         row.innerHTML = `
             <td><input type="text" class="item-name" placeholder="Ital neve..." value="${name}"></td>
             <td><input type="number" class="start-qty" oninput="calculateAll()"></td>
@@ -193,31 +239,101 @@
     function calculateAll() {
         const rows = document.getElementById('inventory-table').rows;
         let grandTotal = 0;
-
         for (let i = 0; i < rows.length; i++) {
             const row = rows[i];
             const startQty = parseFloat(row.querySelector('.start-qty').value) || 0;
             const currentQty = parseFloat(row.querySelector('.current-qty').value) || 0;
             const price = parseFloat(row.querySelector('.price').value) || 0;
-
             const consumption = startQty - currentQty;
             row.querySelector('.consumption').textContent = consumption.toFixed(2);
-
             const total = consumption * price;
             row.querySelector('.total').textContent = total.toFixed(2);
-
             grandTotal += total;
         }
-
         document.getElementById('grand-total').textContent = `Teljes összeg: ${grandTotal.toFixed(2)} Ft`;
     }
 
+    // --- ÚJ FUNKCIÓK A BEÁLLÍTÁSOK MENÜHÖZ ---
+    const settingsPanel = document.getElementById('settings-panel');
+    const sliders = {
+        name: document.getElementById('name-width-slider'),
+        qty: document.getElementById('qty-width-slider'),
+        price: document.getElementById('price-width-slider')
+    };
+    const displays = {
+        name: document.getElementById('name-width-display'),
+        qty: document.getElementById('qty-width-display'),
+        price: document.getElementById('price-width-display')
+    };
+
+    function toggleSettings() {
+        settingsPanel.classList.toggle('visible');
+    }
+
+    function applyColumnWidths(settings) {
+        const styleEl = document.getElementById('dynamic-styles');
+        // A Fogyás és Összeg oszlopok a maradék helyen osztoznak
+        const remainingWidth = 100 - settings.name - (settings.qty * 2) - settings.price;
+        const autoWidth = remainingWidth / 2;
+
+        styleEl.innerHTML = `
+            table th:nth-child(1), table td:nth-child(1) { width: ${settings.name}%; }
+            table th:nth-child(2), table td:nth-child(2) { width: ${settings.qty}%; }
+            table th:nth-child(3), table td:nth-child(3) { width: ${settings.qty}%; }
+            table th:nth-child(4), table td:nth-child(4) { width: ${autoWidth}%; }
+            table th:nth-child(5), table td:nth-child(5) { width: ${settings.price}%; }
+            table th:nth-child(6), table td:nth-child(6) { width: ${autoWidth}%; }
+        `;
+        // Frissítjük a kijelzőket is
+        displays.name.textContent = `${settings.name}%`;
+        displays.qty.textContent = `${settings.qty}%`;
+        displays.price.textContent = `${settings.price}%`;
+    }
+
+    function saveSettings() {
+        const settings = {
+            name: sliders.name.value,
+            qty: sliders.qty.value,
+            price: sliders.price.value
+        };
+        localStorage.setItem('placcColumnSettings', JSON.stringify(settings));
+    }
+    
+    function updateColumnWidths() {
+        const settings = {
+            name: parseInt(sliders.name.value),
+            qty: parseInt(sliders.qty.value),
+            price: parseInt(sliders.price.value)
+        };
+        applyColumnWidths(settings);
+        saveSettings(); // Minden változtatáskor mentünk
+    }
+
+    function loadSettings() {
+        const savedSettings = localStorage.getItem('placcColumnSettings');
+        let settings = { name: 35, qty: 15, price: 15 }; // Alapértelmezett értékek
+
+        if (savedSettings) {
+            settings = JSON.parse(savedSettings);
+        }
+
+        sliders.name.value = settings.name;
+        sliders.qty.value = settings.qty;
+        sliders.price.value = settings.price;
+
+        applyColumnWidths(settings);
+    }
+
+    // --- OLDAL BETÖLTÉSE ---
     window.onload = function() {
+        // Tételek betöltése
         defaultItems.forEach(item => {
             addRow(item.name, item.pricePerUnit);
         });
-        // Hozzáad egy üres sort is a végére
-        addRow();
+        addRow(); // Üres sor a végére
+
+        // Oszlopszélességek betöltése
+        loadSettings();
     };
 </script>
 
