@@ -1,4 +1,6 @@
-<html lang="hu"><head>
+<!DOCTYPE html>
+<html lang="hu">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Placc Lap</title>
@@ -50,11 +52,10 @@
             color: white; 
             text-align: center; 
         }
-        /* Tétel nevének oszlopát szélesebbé teszi */
         th:first-child, td:first-child { 
             text-align: left; 
             font-weight: bold; 
-            width: 30%; /* Itt állítjuk be a szélességet */
+            width: 30%;
         }
         input {
             width: 95%; 
@@ -67,7 +68,6 @@
             background-color: var(--container-bg); 
             color: var(--text-color);
         }
-        /* A név beviteli mezője igazodjon balra */
         td:first-child input { 
             text-align: left; 
         }
@@ -131,391 +131,15 @@
                 <tr>
                     <th>Tétel neve</th>
                     <th>Kezdő (L/db)</th>
+                    <th>Áru +</th>
+                    <th>Összes</th>
                     <th>Jelenlegi (L/db)</th>
                     <th>Fogyás (L/db)</th>
                     <th>Ár (Ft/egység)</th>
                     <th>Összeg (Ft)</th>
                 </tr>
             </thead>
-            <tbody id="inventory-table"><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Napóleon" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="7000"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Cherry" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="6000"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Vodka" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="11000"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Törköly" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="12000"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Hubertus" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="12000"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Jägermeister" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="16000"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Jim Beam" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="16000"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Unicum" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="16000"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Vilmoskörte" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="13000"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Porto" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="18000"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Mák" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="23000"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Becherovka" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="13000"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Birs" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="20000"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Tátra" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="18000"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Jack Daniel's" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="19000"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Csapolt Sör" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="1200"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Rákóczi" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="410"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Kőbányai" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="460"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Soproni" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="570"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Borsodi" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="510"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Arany Ászok" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="520"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Bak" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="600"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Dreher" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="580"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Heineken" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="650"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Somersby" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="770"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Dreher Meggy" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="670"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Dreher Menta" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="520"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Dobozos Kőbányai" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="480"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Staropramen" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="650"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Peroni" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="630"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Bacardi" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="13000"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Bikavér" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="2200"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Olaszrizling" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="2200"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Rosé" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="2200"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Irsai Olivér" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="2200"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Orosz Pezsgő" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="1800"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Szürkebarát" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="2200"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Szóda" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="300"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Coca-Cola / Üdítők" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="450"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Top Joy" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="380"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Hell / Energiaital" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="450"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="2/1 Üdítő" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="1000"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Rostos levek" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="1200"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Kávé" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="310"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Forró csoki" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="350"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Cappuccino" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="350"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Tejpor" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="40"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Tejszín" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="40"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Hab" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="90"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Tea" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="350"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Dreher Citrom (alk. mentes)" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="400"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Ropi" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="170"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Sport szelet" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="310"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Balaton szelet" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="270"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Tic Tac" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="360"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Rágó" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="400"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Mogyoró" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="430"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Chips" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="650"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Gyufa" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="50"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Papírzsebkendő" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="120"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Milka csoki" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="650"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Szotyi" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="310"></td>
-        <td class="calculated total">0</td></tr><tr>
-        <td><input type="text" class="item-name" placeholder="Ital neve..." value="Tökmag" oninput="updateAllCalculations()"></td>
-        <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value=""></td>
-        <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value=""></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" oninput="updateAllCalculations()" value="450"></td>
-        <td class="calculated total">0</td></tr></tbody>
+            <tbody id="inventory-table"></tbody>
         </table>
         <div class="button-container">
             <button class="add-btn" onclick="addRow()">Új Tétel Hozzáadása</button>
@@ -526,10 +150,7 @@
     </div>
     <div class="cash-section">
         <h2>2. Kassza Zárás</h2>
-        <table id="cash-table-container">
-        <tbody><tr><td style="font-weight: bold; background-color: #f0f0f0;">Bank (Kassza nyitó)</td><td><input type="number" id="bank-amount" oninput="updateAllCalculations()" placeholder="Nyitó pénzösszeg..."></td></tr>
-        <tr><td style="font-weight: bold; background-color: #f0f0f0;">Kiadás (Árubeszerzés, stb.)</td><td><input type="number" id="expense-amount" oninput="updateAllCalculations()" placeholder="Kifizetések összege..."></td></tr>
-        <tr><td colspan="2" style="background-color: #e9ecef; text-align: center; font-weight: bold;">Kassza Tartalma</td></tr><tr><td>20&nbsp;000 Ft</td><td><input type="number" id="note-20000" class="denomination-qty" oninput="updateAllCalculations()" placeholder="Darabszám..."></td></tr><tr><td>10&nbsp;000 Ft</td><td><input type="number" id="note-10000" class="denomination-qty" oninput="updateAllCalculations()" placeholder="Darabszám..."></td></tr><tr><td>5000 Ft</td><td><input type="number" id="note-5000" class="denomination-qty" oninput="updateAllCalculations()" placeholder="Darabszám..."></td></tr><tr><td>2000 Ft</td><td><input type="number" id="note-2000" class="denomination-qty" oninput="updateAllCalculations()" placeholder="Darabszám..."></td></tr><tr><td>1000 Ft</td><td><input type="number" id="note-1000" class="denomination-qty" oninput="updateAllCalculations()" placeholder="Darabszám..."></td></tr><tr><td>500 Ft</td><td><input type="number" id="note-500" class="denomination-qty" oninput="updateAllCalculations()" placeholder="Darabszám..."></td></tr><tr><td>200 Ft</td><td><input type="number" id="note-200" class="denomination-qty" oninput="updateAllCalculations()" placeholder="Darabszám..."></td></tr><tr><td>100 Ft</td><td><input type="number" id="note-100" class="denomination-qty" oninput="updateAllCalculations()" placeholder="Darabszám..."></td></tr><tr><td>50 Ft</td><td><input type="number" id="note-50" class="denomination-qty" oninput="updateAllCalculations()" placeholder="Darabszám..."></td></tr><tr><td>20 Ft</td><td><input type="number" id="note-20" class="denomination-qty" oninput="updateAllCalculations()" placeholder="Darabszám..."></td></tr><tr><td>10 Ft</td><td><input type="number" id="note-10" class="denomination-qty" oninput="updateAllCalculations()" placeholder="Darabszám..."></td></tr><tr><td>5 Ft</td><td><input type="number" id="note-5" class="denomination-qty" oninput="updateAllCalculations()" placeholder="Darabszám..."></td></tr><tr><td style="font-weight: bold;">Bankkártya (Ft)</td><td><input type="number" id="card-payment" oninput="updateAllCalculations()" placeholder="Bankkártyás bevétel..."></td></tr></tbody></table>
+        <table id="cash-table-container"></table>
     </div>
     <div class="totals-section">
         <h2>3. Összesítés</h2>
@@ -544,69 +165,69 @@
 <script>
 // --- ALAPÉRTELMEZETT TÉTELEK ---
 const defaultItems = [
-    {"name": "Napóleon", "price": "7000", "start": "", "current": ""},
-    {"name": "Cherry", "price": "6000", "start": "", "current": ""},
-    {"name": "Vodka", "price": "11000", "start": "", "current": ""},
-    {"name": "Törköly", "price": "12000", "start": "", "current": ""},
-    {"name": "Hubertus", "price": "12000", "start": "", "current": ""},
-    {"name": "Jägermeister", "price": "16000", "start": "", "current": ""},
-    {"name": "Jim Beam", "price": "16000", "start": "", "current": ""},
-    {"name": "Unicum", "price": "16000", "start": "", "current": ""},
-    {"name": "Vilmoskörte", "price": "13000", "start": "", "current": ""},
-    {"name": "Porto", "price": "18000", "start": "", "current": ""},
-    {"name": "Mák", "price": "23000", "start": "", "current": ""},
-    {"name": "Becherovka", "price": "13000", "start": "", "current": ""},
-    {"name": "Birs", "price": "20000", "start": "", "current": ""},
-    {"name": "Tátra", "price": "18000", "start": "", "current": ""},
-    {"name": "Jack Daniel's", "price": "19000", "start": "", "current": ""},
-    {"name": "Csapolt Sör", "price": "1200", "start": "", "current": ""},
-    {"name": "Rákóczi", "price": "410", "start": "", "current": ""},
-    {"name": "Kőbányai", "price": "460", "start": "", "current": ""},
-    {"name": "Soproni", "price": "570", "start": "", "current": ""},
-    {"name": "Borsodi", "price": "510", "start": "", "current": ""},
-    {"name": "Arany Ászok", "price": "520", "start": "", "current": ""},
-    {"name": "Bak", "price": "600", "start": "", "current": ""},
-    {"name": "Dreher", "price": "580", "start": "", "current": ""},
-    {"name": "Heineken", "price": "650", "start": "", "current": ""},
-    {"name": "Somersby", "price": "770", "start": "", "current": ""},
-    {"name": "Dreher Meggy", "price": "670", "start": "", "current": ""},
-    {"name": "Dreher Menta", "price": "520", "start": "", "current": ""},
-    {"name": "Dobozos Kőbányai", "price": "480", "start": "", "current": ""},
-    {"name": "Staropramen", "price": "650", "start": "", "current": ""},
-    {"name": "Peroni", "price": "630", "start": "", "current": ""},
-    {"name": "Bacardi", "price": "13000", "start": "", "current": ""},
-    {"name": "Bikavér", "price": "2200", "start": "", "current": ""},
-    {"name": "Olaszrizling", "price": "2200", "start": "", "current": ""},
-    {"name": "Rosé", "price": "2200", "start": "", "current": ""},
-    {"name": "Irsai Olivér", "price": "2200", "start": "", "current": ""},
-    {"name": "Orosz Pezsgő", "price": "1800", "start": "", "current": ""},
-    {"name": "Szürkebarát", "price": "2200", "start": "", "current": ""},
-    {"name": "Szóda", "price": "300", "start": "", "current": ""},
-    {"name": "Coca-Cola / Üdítők", "price": "450", "start": "", "current": ""},
-    {"name": "Top Joy", "price": "380", "start": "", "current": ""},
-    {"name": "Hell / Energiaital", "price": "450", "start": "", "current": ""},
-    {"name": "2/1 Üdítő", "price": "1000", "start": "", "current": ""},
-    {"name": "Rostos levek", "price": "1200", "start": "", "current": ""},
-    {"name": "Kávé", "price": "310", "start": "", "current": ""},
-    {"name": "Forró csoki", "price": "350", "start": "", "current": ""},
-    {"name": "Cappuccino", "price": "350", "start": "", "current": ""},
-    {"name": "Tejpor", "price": "40", "start": "", "current": ""},
-    {"name": "Tejszín", "price": "40", "start": "", "current": ""},
-    {"name": "Hab", "price": "90", "start": "", "current": ""},
-    {"name": "Tea", "price": "350", "start": "", "current": ""},
-    {"name": "Dreher Citrom (alk. mentes)", "price": "400", "start": "", "current": ""},
-    {"name": "Ropi", "price": "170", "start": "", "current": ""},
-    {"name": "Sport szelet", "price": "310", "start": "", "current": ""},
-    {"name": "Balaton szelet", "price": "270", "start": "", "current": ""},
-    {"name": "Tic Tac", "price": "360", "start": "", "current": ""},
-    {"name": "Rágó", "price": "400", "start": "", "current": ""},
-    {"name": "Mogyoró", "price": "430", "start": "", "current": ""},
-    {"name": "Chips", "price": "650", "start": "", "current": ""},
-    {"name": "Gyufa", "price": "50", "start": "", "current": ""},
-    {"name": "Papírzsebkendő", "price": "120", "start": "", "current": ""},
-    {"name": "Milka csoki", "price": "650", "start": "", "current": ""},
-    {"name": "Szotyi", "price": "310", "start": "", "current": ""},
-    {"name": "Tökmag", "price": "450", "start": "", "current": ""}
+    {"name": "Napóleon", "price": "7000", "start": "", "added": "", "current": ""},
+    {"name": "Cherry", "price": "6000", "start": "", "added": "", "current": ""},
+    {"name": "Vodka", "price": "11000", "start": "", "added": "", "current": ""},
+    {"name": "Törköly", "price": "12000", "start": "", "added": "", "current": ""},
+    {"name": "Hubertus", "price": "12000", "start": "", "added": "", "current": ""},
+    {"name": "Jägermeister", "price": "16000", "start": "", "added": "", "current": ""},
+    {"name": "Jim Beam", "price": "16000", "start": "", "added": "", "current": ""},
+    {"name": "Unicum", "price": "16000", "start": "", "added": "", "current": ""},
+    {"name": "Vilmoskörte", "price": "13000", "start": "", "added": "", "current": ""},
+    {"name": "Porto", "price": "18000", "start": "", "added": "", "current": ""},
+    {"name": "Mák", "price": "23000", "start": "", "added": "", "current": ""},
+    {"name": "Becherovka", "price": "13000", "start": "", "added": "", "current": ""},
+    {"name": "Birs", "price": "20000", "start": "", "added": "", "current": ""},
+    {"name": "Tátra", "price": "18000", "start": "", "added": "", "current": ""},
+    {"name": "Jack Daniel's", "price": "19000", "start": "", "added": "", "current": ""},
+    {"name": "Csapolt Sör", "price": "1200", "start": "", "added": "", "current": ""},
+    {"name": "Rákóczi", "price": "410", "start": "", "added": "", "current": ""},
+    {"name": "Kőbányai", "price": "460", "start": "", "added": "", "current": ""},
+    {"name": "Soproni", "price": "570", "start": "", "added": "", "current": ""},
+    {"name": "Borsodi", "price": "510", "start": "", "added": "", "current": ""},
+    {"name": "Arany Ászok", "price": "520", "start": "", "added": "", "current": ""},
+    {"name": "Bak", "price": "600", "start": "", "added": "", "current": ""},
+    {"name": "Dreher", "price": "580", "start": "", "added": "", "current": ""},
+    {"name": "Heineken", "price": "650", "start": "", "added": "", "current": ""},
+    {"name": "Somersby", "price": "770", "start": "", "added": "", "current": ""},
+    {"name": "Dreher Meggy", "price": "670", "start": "", "added": "", "current": ""},
+    {"name": "Dreher Menta", "price": "520", "start": "", "added": "", "current": ""},
+    {"name": "Dobozos Kőbányai", "price": "480", "start": "", "added": "", "current": ""},
+    {"name": "Staropramen", "price": "650", "start": "", "added": "", "current": ""},
+    {"name": "Peroni", "price": "630", "start": "", "added": "", "current": ""},
+    {"name": "Bacardi", "price": "13000", "start": "", "added": "", "current": ""},
+    {"name": "Bikavér", "price": "2200", "start": "", "added": "", "current": ""},
+    {"name": "Olaszrizling", "price": "2200", "start": "", "added": "", "current": ""},
+    {"name": "Rosé", "price": "2200", "start": "", "added": "", "current": ""},
+    {"name": "Irsai Olivér", "price": "2200", "start": "", "added": "", "current": ""},
+    {"name": "Orosz Pezsgő", "price": "1800", "start": "", "added": "", "current": ""},
+    {"name": "Szürkebarát", "price": "2200", "start": "", "added": "", "current": ""},
+    {"name": "Szóda", "price": "300", "start": "", "added": "", "current": ""},
+    {"name": "Coca-Cola / Üdítők", "price": "450", "start": "", "added": "", "current": ""},
+    {"name": "Top Joy", "price": "380", "start": "", "added": "", "current": ""},
+    {"name": "Hell / Energiaital", "price": "450", "start": "", "added": "", "current": ""},
+    {"name": "2/1 Üdítő", "price": "1000", "start": "", "added": "", "current": ""},
+    {"name": "Rostos levek", "price": "1200", "start": "", "added": "", "current": ""},
+    {"name": "Kávé", "price": "310", "start": "", "added": "", "current": ""},
+    {"name": "Forró csoki", "price": "350", "start": "", "added": "", "current": ""},
+    {"name": "Cappuccino", "price": "350", "start": "", "added": "", "current": ""},
+    {"name": "Tejpor", "price": "40", "start": "", "added": "", "current": ""},
+    {"name": "Tejszín", "price": "40", "start": "", "added": "", "current": ""},
+    {"name": "Hab", "price": "90", "start": "", "added": "", "current": ""},
+    {"name": "Tea", "price": "350", "start": "", "added": "", "current": ""},
+    {"name": "Dreher Citrom (alk. mentes)", "price": "400", "start": "", "added": "", "current": ""},
+    {"name": "Ropi", "price": "170", "start": "", "added": "", "current": ""},
+    {"name": "Sport szelet", "price": "310", "start": "", "added": "", "current": ""},
+    {"name": "Balaton szelet", "price": "270", "start": "", "added": "", "current": ""},
+    {"name": "Tic Tac", "price": "360", "start": "", "added": "", "current": ""},
+    {"name": "Rágó", "price": "400", "start": "", "added": "", "current": ""},
+    {"name": "Mogyoró", "price": "430", "start": "", "added": "", "current": ""},
+    {"name": "Chips", "price": "650", "start": "", "added": "", "current": ""},
+    {"name": "Gyufa", "price": "50", "start": "", "added": "", "current": ""},
+    {"name": "Papírzsebkendő", "price": "120", "start": "", "added": "", "current": ""},
+    {"name": "Milka csoki", "price": "650", "start": "", "added": "", "current": ""},
+    {"name": "Szotyi", "price": "310", "start": "", "added": "", "current": ""},
+    {"name": "Tökmag", "price": "450", "start": "", "added": "", "current": ""}
 ];
 const denominations = [20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10, 5];
 
@@ -617,13 +238,13 @@ function saveStateToLocalStorage() {
         currentState.inventory.push({
             name: row.querySelector('.item-name').value,
             start: row.querySelector('.start-qty').value,
+            added: row.querySelector('.added-qty').value,
             current: row.querySelector('.current-qty').value,
             price: row.querySelector('.price').value
         });
     });
     denominations.forEach(d => { currentState.cash[`note_${d}`] = document.getElementById(`note-${d}`).value; });
     currentState.cash.card_payment = document.getElementById('card-payment').value;
-    // Új mezők mentése
     currentState.cash.bank_amount = document.getElementById('bank-amount').value;
     currentState.cash.expense_amount = document.getElementById('expense-amount').value;
     localStorage.setItem('csaposlap_autosave', JSON.stringify(currentState));
@@ -637,7 +258,7 @@ function loadStateFromLocalStorage() {
 function startNewShift() {
     if (!confirm("Biztosan új elszámolást (placcot) szeretnél kezdeni?\nA tételek és árak megmaradnak, de a mennyiségek és a kassza adatai törlődnek.")) return;
     const currentData = loadStateFromLocalStorage() || { inventory: defaultItems, cash: {} };
-    currentData.inventory.forEach(item => { item.start = ''; item.current = ''; });
+    currentData.inventory.forEach(item => { item.start = ''; item.added = ''; item.current = ''; });
     currentData.cash = {};
     localStorage.setItem('csaposlap_autosave', JSON.stringify(currentData));
     location.reload();
@@ -660,35 +281,15 @@ function calculateInventory() {
     let grandTotal = 0;
     document.querySelectorAll('#inventory-table tr').forEach(row => {
         const startQty = parseFloat(row.querySelector('.start-qty').value) || 0;
+        const addedQty = parseFloat(row.querySelector('.added-qty').value) || 0;
         const currentQty = parseFloat(row.querySelector('.current-qty').value) || 0;
         const price = parseFloat(row.querySelector('.price').value) || 0;
+        
+        const totalQty = startQty + addedQty;
         const consumption = startQty - currentQty;
         const total = consumption * price;
-        row.querySelector('.consumption').textContent = consumption.toFixed(2);
-        row.querySelector('.total').textContent = total.toLocaleString('hu-HU');
-        grandTotal += total;
-    });
-    return grandTotal;
-}
 
-function calculateInventory() {
-    let grandTotal = 0;
-    document.querySelectorAll('#inventory-table tr').forEach(row => {
-        const startQty = parseFloat(row.querySelector('.start-qty').value) || 0;
-        
-        // --- EZEK AZ ÚJ LOGIKA SORAI ---
-        const addedQty = parseFloat(row.querySelector('.added-qty').value) || 0; // 1. Beolvassa az "Áru +" értékét
-        const totalQty = startQty + addedQty; // 2. Kiszámolja az "Összes"-t
-        const consumption = startQty - currentQty; // 3. A Fogyás a régi logika szerint számolódik
-        // --- EDDIG TART ---
-
-        const currentQty = parseFloat(row.querySelector('.current-qty').value) || 0;
-        const price = parseFloat(row.querySelector('.price').value) || 0;
-        const total = consumption * price;
-
-        // --- ÚJ ÉRTÉK MEGJELENÍTÉSE ---
-        row.querySelector('.total-qty').textContent = totalQty.toFixed(2); // 4. Beírja a kiszámolt "Összes" értéket a cellába
-        
+        row.querySelector('.total-qty').textContent = totalQty.toFixed(2);
         row.querySelector('.consumption').textContent = consumption.toFixed(2);
         row.querySelector('.total').textContent = total.toLocaleString('hu-HU');
         grandTotal += total;
@@ -708,17 +309,13 @@ function calculateCashInTill() {
 function calculateTotals() {
     const salesTotal = calculateInventory();
     const cashInTill = calculateCashInTill();
-    
-    // Új mezők értékének beolvasása
     const bankAmount = parseFloat(document.getElementById('bank-amount').value) || 0;
     const expenseAmount = parseFloat(document.getElementById('expense-amount').value) || 0;
     
-    // Új számítási logika
     const actualRevenue = cashInTill - bankAmount;
     const difference = actualRevenue - salesTotal;
     const netRevenue = actualRevenue - expenseAmount;
     
-    // Értékek kiírása
     document.getElementById('sales-total').querySelector('span:last-child').textContent = `${salesTotal.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`;
     document.getElementById('revenue-total').querySelector('span:last-child').textContent = `${actualRevenue.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`;
     document.getElementById('net-revenue').querySelector('span:last-child').textContent = `${netRevenue.toLocaleString('hu-HU', { maximumFractionDigits: 2 })} Ft`;
@@ -735,38 +332,25 @@ function calculateTotals() {
     }
 }
 
-
 // --- FELÜLET ÉPÍTÉSE ---
-function addRow(item = { name: '', price: '', start: '', current: '' }) {
+function addRow(item = { name: '', price: '', start: '', added: '', current: '' }) {
     const tableBody = document.getElementById('inventory-table');
     const row = tableBody.insertRow();
     row.innerHTML = `
         <td><input type="text" class="item-name" placeholder="Ital neve..." value="${item.name}" oninput="updateAllCalculations()"></td>
         <td><input type="number" step="0.01" class="start-qty" oninput="updateAllCalculations()" value="${item.start}"></td>
+        <td><input type="number" step="0.01" class="added-qty" oninput="updateAllCalculations()" value="${item.added}"></td>
+        <td class="calculated total-qty">0.00</td>
         <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value="${item.current}"></td>
         <td class="calculated consumption">0.00</td>
         <td><input type="number" class="price" oninput="updateAllCalculations()" value="${item.price}"></td>
         <td class="calculated total">0</td>`;
 }
-function addRow(item = { /*...*/ }) {
-    // ...
-    row.innerHTML = `
-        <td><input type="text" class="item-name" ...></td>
-        <td><input type="number" class="start-qty" ...></td>
-        
-        <td><input type="number" step="0.01" class="added-qty" oninput="updateAllCalculations()" value="${item.added}"></td>
-        <td class="calculated total-qty">0.00</td>
-        <td><input type="number" class="current-qty" ...></td>
-        <td class="calculated consumption">0.00</td>
-        <td><input type="number" class="price" ...></td>
-        <td class="calculated total">0</td>`;
-}
 
 function saveDataAsFile() {
-    if(!confirm("A jelenlegi állapot egy letölthető HTML fájlként lesz elmentve. A böngésző elindíthatja a letöltést. Folytatod?")) return;
-    saveStateToLocalStorage(); // Biztosítjuk, hogy a legfrissebb adatok kerüljenek mentésre
+    if(!confirm("A jelenlegi állapot egy letölthető HTML fájlként lesz elmentve. Folytatod?")) return;
+    saveStateToLocalStorage();
     const currentState = loadStateFromLocalStorage();
-    // A 'savedData' konstans felülírása a scriptben a jelenlegi adatokkal
     const fileContent = document.documentElement.outerHTML.replace('const savedData = null;', `const savedData = ${JSON.stringify(currentState, null, 4)};`);
     
     const blob = new Blob([fileContent], { type: 'text/html' });
@@ -781,12 +365,10 @@ function saveDataAsFile() {
     URL.revokeObjectURL(a.href);
 }
 
-// Ezt a sort üresen hagyjuk, hogy a mentés felülírhassa
 const savedData = null;
 
 // --- OLDAL BETÖLTÉSE ---
 window.onload = function() {
-    // Kassza táblázat felépítése az új mezőkkel
     let cashTableHTML = `
         <tr><td style="font-weight: bold; background-color: #f0f0f0;">Bank (Kassza nyitó)</td><td><input type="number" id="bank-amount" oninput="updateAllCalculations()" placeholder="Nyitó pénzösszeg..."></td></tr>
         <tr><td style="font-weight: bold; background-color: #f0f0f0;">Kiadás (Árubeszerzés, stb.)</td><td><input type="number" id="expense-amount" oninput="updateAllCalculations()" placeholder="Kifizetések összege..."></td></tr>
@@ -797,20 +379,18 @@ window.onload = function() {
     cashTableHTML += `<tr><td style="font-weight: bold;">Bankkártya (Ft)</td><td><input type="number" id="card-payment" oninput="updateAllCalculations()" placeholder="Bankkártyás bevétel..."></td></tr>`;
     document.getElementById('cash-table-container').innerHTML = cashTableHTML;
 
-    // Betöltési logika
     let itemsToDisplay = defaultItems;
     const autoSavedState = loadStateFromLocalStorage();
 
     if (autoSavedState && autoSavedState.inventory && autoSavedState.inventory.length > 0) {
         itemsToDisplay = autoSavedState.inventory;
     } else if (savedData && savedData.inventory && savedData.inventory.length > 0) {
-        // Ha van fájlból mentett adat, de localstorage-ből nincs
         itemsToDisplay = savedData.inventory;
     }
 
+    // A defaultItems-ban is kell lennie 'added' kulcsnak
     itemsToDisplay.forEach(item => addRow(item));
     
-    // Kassza adatainak betöltése (localstorage vagy fájl)
     const cashDataToLoad = autoSavedState ? autoSavedState.cash : (savedData ? savedData.cash : null);
     if (cashDataToLoad) {
         denominations.forEach(d => { document.getElementById(`note-${d}`).value = cashDataToLoad[`note_${d}`] || ''; });
@@ -823,5 +403,5 @@ window.onload = function() {
 };
 </script>
 
-
-</body></html>
+</body>
+</html>
