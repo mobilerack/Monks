@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Placc Lap</title>
+    <title>Placc Lap - Teljes Lista</title>
     <style>
         :root {
             --bg-color: #f4f4f9; 
@@ -57,6 +57,11 @@
             font-weight: bold; 
             width: 30%;
         }
+        /* Utolsó oszlop a törlés gombnak */
+        th:last-child, td:last-child {
+            width: 50px;
+            text-align: center;
+        }
         input {
             width: 95%; 
             padding: 8px; 
@@ -92,8 +97,15 @@
         }
         .add-btn { background-color: #28a745; }
         .save-btn { background-color: #007bff; }
-        .clear-btn { background-color: #dc3545; }
         .new-shift-btn { background-color: #ffc107; color: #212529; }
+        .delete-row-btn {
+            background-color: transparent;
+            color: var(--negative-color);
+            border: none;
+            font-size: 1.5em;
+            padding: 0;
+            line-height: 1;
+        }
         .totals-section {
             margin-top: 30px; 
             padding: 20px; 
@@ -137,6 +149,7 @@
                     <th>Fogyás (L/db)</th>
                     <th>Ár (Ft/egység)</th>
                     <th>Összeg (Ft)</th>
+                    <th>Törlés</th>
                 </tr>
             </thead>
             <tbody id="inventory-table"></tbody>
@@ -145,7 +158,6 @@
             <button class="add-btn" onclick="addRow()">Új Tétel Hozzáadása</button>
             <button class="save-btn" onclick="saveDataAsFile()">Mentés Fájlba</button>
             <button class="new-shift-btn" onclick="startNewShift()">Új Placc Kezdése</button>
-            <button class="clear-btn" onclick="clearAllData()">Teljes Törlés</button>
         </div>
     </div>
     <div class="cash-section">
@@ -163,7 +175,7 @@
 </div>
 
 <script>
-// --- ALAPÉRTELMEZETT TÉTELEK ---
+// --- ALAPÉRTELMEZETT TÉTELEK (TELJES LISTA) ---
 const defaultItems = [
     {"name": "Napóleon", "price": "7000", "start": "", "added": "", "current": ""},
     {"name": "Cherry", "price": "6000", "start": "", "added": "", "current": ""},
@@ -264,13 +276,6 @@ function startNewShift() {
     location.reload();
 }
 
-function clearAllData() {
-    if (confirm("FIGYELEM! Biztosan törölni szeretnéd az ÖSSZES beírt adatot, beleértve a tételeket és árakat is? Ez a művelet nem vonható vissza.")) {
-        localStorage.removeItem('csaposlap_autosave');
-        location.reload();
-    }
-}
-
 // --- SZÁMÍTÁSOK ---
 function updateAllCalculations() {
     calculateTotals();
@@ -344,7 +349,8 @@ function addRow(item = { name: '', price: '', start: '', added: '', current: '' 
         <td><input type="number" step="0.01" class="current-qty" oninput="updateAllCalculations()" value="${item.current}"></td>
         <td class="calculated consumption">0.00</td>
         <td><input type="number" class="price" oninput="updateAllCalculations()" value="${item.price}"></td>
-        <td class="calculated total">0</td>`;
+        <td class="calculated total">0</td>
+        <td><button class="delete-row-btn">🗑️</button></td>`;
 }
 
 function saveDataAsFile() {
@@ -388,7 +394,6 @@ window.onload = function() {
         itemsToDisplay = savedData.inventory;
     }
 
-    // A defaultItems-ban is kell lennie 'added' kulcsnak
     itemsToDisplay.forEach(item => addRow(item));
     
     const cashDataToLoad = autoSavedState ? autoSavedState.cash : (savedData ? savedData.cash : null);
@@ -399,6 +404,21 @@ window.onload = function() {
         document.getElementById('expense-amount').value = cashDataToLoad.expense_amount || '';
     }
     
+    // ESEMÉNYKEZELŐ A TÖRLÉS GOMBOKHOZ
+    const tableBody = document.getElementById('inventory-table');
+    tableBody.addEventListener('click', function(event) {
+        if (event.target.classList.contains('delete-row-btn')) {
+            const row = event.target.closest('tr');
+            if (row) {
+                const itemName = row.querySelector('.item-name').value || "névtelen tétel";
+                if (confirm(`Biztosan törölni szeretnéd a következő tételt: "${itemName}"?`)) {
+                    row.remove();
+                    updateAllCalculations(); // Újraszámolás a törlés után
+                }
+            }
+        }
+    });
+
     calculateTotals();
 };
 </script>
